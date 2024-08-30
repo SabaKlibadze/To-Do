@@ -23,18 +23,18 @@
             <div id="create-new-task-btn" class="create-new-task-btn">+</div>
         </nav>
         <div class="main_container">
-            <main class="task-container" id="task-container">
+            <form class="task-container" id="task-container" method="post">
+                {% csrf_token %}
                 <!-- <div class="task" id="task">
                     <span class="priority-flag-medium"></span>
                     <span class="task-checkbox"></span>
                     <span class="task-name"> Donec fringilla quam </span>
-                    <button class="details" id="details"></button>
-                    <label for="details" class="task-details-label"> details </label>
+                    <button class="task-details" id="task-details"> details </button>
                     <span class="task-date"> Aug 28th </span>
                     <button class="task-edit"></button>
                     <button class="task-delete"></button>
                 </div> -->
-            </main>
+            </form>
         </div>
     </div>
     <div class="popup-new" id="popup-new">

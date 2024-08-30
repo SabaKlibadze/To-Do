@@ -4,7 +4,7 @@ import json
 from . models import Task
 
 
-def test(request):
+def index(request):
     return render(request, "index.html")
 
 
@@ -32,8 +32,16 @@ def add_task(request):
 
 
 def get_tasks(request):
-    tasks = Task.objects.all().values('title', 'due_date', 'priority')
+    tasks = Task.objects.all().values('id', 'title', 'due_date', 'priority')
     return JsonResponse(list(tasks), safe=False)
 
 
-
+def delete_task(request, task_id):
+    if request.method == 'POST':
+        try:
+            task = Task.objects.get(id=task_id)
+            task.delete()
+            return JsonResponse({'message': 'Task deleted successfully!'}, status=200)
+        except Task.DoesNotExist:
+            return JsonResponse({'error': 'Task not found!'}, status=404)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)

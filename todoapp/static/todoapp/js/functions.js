@@ -21,6 +21,7 @@ addTaskBtn.addEventListener('click', () => {
 
 function addTask(){
     const newTaskName = document.getElementById('create-new__name');
+    const newTaskDetails = document.getElementById('create-new__details');
     const taskContainer = document.getElementById('task-container');
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
@@ -51,14 +52,8 @@ function addTask(){
         taskName.textContent = newTaskName.value;
 
         const taskDetails = document.createElement('button');
-        taskDetails.classList.add('details');
-        taskDetails.setAttribute('id', 'details');
-        const taskDetailsLabel = document.createElement('label');
-        taskDetailsLabel.setAttribute('for', 'details');
-        taskDetailsLabel.classList.add('task-details-label');
-        taskDetailsLabel.textContent = 'details'
-
-        taskDetails.classList.add('task-details');
+        taskDetails.setAttribute('type', 'button')
+        taskDetails.classList.add('task-details')
         taskDetails.textContent = 'details'
 
         const taskDate = document.createElement('span');
@@ -80,7 +75,6 @@ function addTask(){
         task.appendChild(taskCheckbox)
         task.appendChild(taskName);
         task.appendChild(taskDetails);
-        task.appendChild(taskDetailsLabel);
         task.appendChild(taskDate);
         task.appendChild(taskEdit);
         task.appendChild(taskDelete);
@@ -101,7 +95,7 @@ function addTask(){
                 completed: taskCheckbox.classList.contains('checked') ? 'completed' :
                     'not completed',
                 title: taskName.textContent,
-                details: taskDetails.textContent,
+                details: newTaskDetails.value,
                 due_date: dateInput, 
 
             })
@@ -150,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function addTasksFromBase(task) {
     const taskElement = document.createElement('div');
     taskElement.classList.add('task');
+    taskElement.setAttribute('id', `task-${task.id}`)
 
     const priorityFlag = document.createElement('span');
     priorityFlag.classList.add(`priority-flag-${task.priority.toLowerCase()}`);
@@ -163,13 +158,8 @@ function addTasksFromBase(task) {
     taskName.textContent = task.title;
 
     const taskDetails = document.createElement('button');
-    taskDetails.classList.add('details');
-    taskDetails.setAttribute('id', 'details')
-    taskDetails.textContent = task.details
-    const taskDetailsLabel = document.createElement('label');
-    taskDetailsLabel.setAttribute('for', 'details');
-    taskDetailsLabel.classList.add('task-details-label')
-    taskDetailsLabel.textContent = 'details'
+    taskDetails.textContent = 'details'
+    taskDetails.classList.add('task-details')
 
     const taskDate = document.createElement('span');
     taskDate.classList.add('task-date');
@@ -180,14 +170,16 @@ function addTasksFromBase(task) {
 
     const taskDelete = document.createElement('button');
     taskDelete.classList.add('task-delete');
-    taskDelete.addEventListener('click', (e, count) => {
-        e.target.parentElement.remove(), count = homeCount()})
+    taskDelete.setAttribute('data-task-id', task.id);
+    taskDelete.addEventListener('click', (e) => {
+        e.preventDefault(); 
+        deleteTask(task.id);
+    });
 
     taskElement.appendChild(priorityFlag)
     taskElement.appendChild(taskCheckbox)
     taskElement.appendChild(taskName);
     taskElement.appendChild(taskDetails);
-    taskElement.appendChild(taskDetailsLabel)
     taskElement.appendChild(taskDate);
     taskElement.appendChild(taskEdit);
     taskElement.appendChild(taskDelete);
@@ -195,6 +187,30 @@ function addTasksFromBase(task) {
     document.getElementById('task-container').appendChild(taskElement);
 }
 
+
+
+function deleteTask(taskId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    fetch(`/delete_task/${taskId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById(`task-${taskId}`).remove();
+            console.log('Task deleted successfully');
+        } else {
+            console.error('Failed to delete task');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    })
+}
 
 
 function toggleNewTaskPopup() {
