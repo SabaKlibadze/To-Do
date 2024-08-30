@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> TO-DO </title>
+    <link rel="stylesheet" href="../static/todoapp/css/styles.css">
+</head>
+<body>
+    <div class="content">
+        <header class="header">
+            TO-DO
+        </header>
+        <nav class="side_bar">
+            <ul id="nav">
+                <li id="home"> 
+                    <span class="project-name" id="project-name"> // home </span>
+                    <span class="project-count" id="project-count" > </span>
+                </li>
+                <li id="today"> // Today </li>
+                <li id="week"> // Week </li>
+            </ul>
+            <div id="create-new-task-btn" class="create-new-task-btn">+</div>
+        </nav>
+        <div class="main_container">
+            <main class="task-container" id="task-container">
+                <!-- <div class="task" id="task">
+                    <span class="priority-flag-medium"></span>
+                    <span class="task-checkbox"></span>
+                    <span class="task-name"> Donec fringilla quam </span>
+                    <button class="details" id="details"></button>
+                    <label for="details" class="task-details-label"> details </label>
+                    <span class="task-date"> Aug 28th </span>
+                    <button class="task-edit"></button>
+                    <button class="task-delete"></button>
+                </div> -->
+            </main>
+        </div>
+    </div>
+    <div class="popup-new" id="popup-new">
+        <div class="overlay"></div>
+        <form class="create-new" method="post">
+            {% csrf_token %}
+            <div class="create-new__header">
+                <h2> Create new task... </h2>
+                <div  class="create-new__close-btn">&times;</div>
+            </div>
+            <div class="create-new__content-box"> 
+                <div class="create-new__sidebar">
+                    <h1> // To-Do</h1>
+                </div>
+                <div class="create-new__imput">
+                    <textarea name="new-task" id="create-new__name" maxlength="50" placeholder="Task name:"></textarea>
+                    <textarea name="new-task-details" id="create-new__details" placeholder="Task details:"></textarea>
+                    <div class="create-new-date">
+                        <div class="create-new-date__title">Dye Date:</div>
+                        <input type="date" class="calendar" id="calendar" name="calendar" required>
+                    </div>
+                    <div class="crate-new__atributes">
+                        <div class="create-new-priority-and-submit">
+                            <div class="create-new-priority">
+                                <div class="create_priority_title"> Priority: </div>
+                                <input type="radio" name="create-priority" id="create-priority-low" value="low" required checked>
+                                <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
+                                <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
+                                <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
+                                <input type="radio" name="create-priority" id="create-priority-high" value="high">
+                                <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
+                            </div>
+                            <input type="button" id="new-task-submit" value="Add task">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+<script src="../static/todoapp/js/functions.js"></script>
+</body>
+</html>
