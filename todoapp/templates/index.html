@@ -29,7 +29,7 @@
                     <span class="priority-flag-medium"></span>
                     <span class="task-checkbox"></span>
                     <span class="task-name"> Donec fringilla quam </span>
-                    <button class="task-details" id="task-details"> details </button>
+                    <div class="task-details-btn" id="task-details-btn"> details </div>
                     <span class="task-date"> Aug 28th </span>
                     <button class="task-edit"></button>
                     <button class="task-delete"></button>
@@ -73,6 +73,29 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div class="details-popup" id="details-popup">
+        <div class="details-popup__overlay"></div>
+            <div class="details-popup__container">
+                <div class="details-popup__close-btn">×</div>
+                <div class="details-popup__content">
+                    <span class="details-popup__title">Lorem ipsum</span>
+                    <div class="details-popup__details-container">
+                        <span class="details-popup__details-span">details:</span>
+                        <p class="details-popup__details-value">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius odio diam, nec placerat mi iaculis quis. 
+                            Pellentesque quis purus ut risus scelerisque ultricies non eget sem. Proin a nisl nibh. Nam pretium eros sit amet faucibus laoreet. 
+                            Praesent tempus ligula eu eleifend varius. Donec eget porta sapien, a varius urna. Aliquam congue neque a mattis molestie.
+                            Maecenas sollicitudin ex arcu, vitae interdum arcu luctus ac. Donec consectetur orci non lectus porta congue. Quisque pretium dui diam, non dapibus urna mollis at 
+                        </p>
+                    </div>
+                    <div class="details-popup__atributes">
+                        <span class="details-popup__priority">Priority:</span>
+                        <span class="details-popup__priority-value"> high </span>
+                        <span class="details-popup__duedate">Due Date:</span>
+                        <span class="details-popup__duedate-value"> 7th feb </span>
+                    </div>
+                </div>
+            </div>
     </div>
 <script src="../static/todoapp/js/functions.js"></script>
 </body>

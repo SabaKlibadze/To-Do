@@ -51,10 +51,12 @@ function addTask(){
         taskName.classList.add('task-name');
         taskName.textContent = newTaskName.value;
 
-        const taskDetails = document.createElement('button');
+        const taskDetails = document.createElement('div');
         taskDetails.setAttribute('type', 'button')
-        taskDetails.classList.add('task-details')
+        taskDetails.classList.add('task-details-btn')
+        taskDetails.setAttribute('id', 'task-details-btn')
         taskDetails.textContent = 'details'
+        taskDetails.addEventListener('click', () => toggleTaskDetailsPopup());
 
         const taskDate = document.createElement('span');
         taskDate.classList.add('task-date');
@@ -157,9 +159,11 @@ function addTasksFromBase(task) {
     taskName.classList.add('task-name');
     taskName.textContent = task.title;
 
-    const taskDetails = document.createElement('button');
+    const taskDetails = document.createElement('div');
     taskDetails.textContent = 'details'
-    taskDetails.classList.add('task-details')
+    taskDetails.classList.add('task-details-btn')
+    taskDetails.setAttribute('id', 'task-details-btn')
+    taskDetails.addEventListener('click', () => toggleTaskDetailsPopup());
 
     const taskDate = document.createElement('span');
     taskDate.classList.add('task-date');
@@ -215,6 +219,10 @@ function deleteTask(taskId) {
 
 function toggleNewTaskPopup() {
     document.getElementById("popup-new").classList.toggle("active");
+}
+
+function toggleTaskDetailsPopup() {
+    document.getElementById("details-popup").classList.toggle("active");
 }
 
 
