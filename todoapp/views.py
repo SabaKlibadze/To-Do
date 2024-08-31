@@ -36,6 +36,20 @@ def get_tasks(request):
     return JsonResponse(list(tasks), safe=False)
 
 
+def get_task_details(request, task_id):
+    try:
+        task = Task.objects.get(id=task_id)
+        task_data = {
+            'title': task.title,
+            'details': task.details,
+            'priority': task.priority,
+            'due_date': task.due_date,
+        }
+        return JsonResponse(task_data)
+    except Task.DoesNotExist:
+        return JsonResponse({'error': 'Task not found!'}, status=404)
+
+
 def delete_task(request, task_id):
     if request.method == 'POST':
         try:

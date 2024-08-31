@@ -141,16 +141,20 @@ ul li {
     background-color: #fff;
 }
 
-.task-container > div {
+.task {
     box-sizing: border-box;
     display: flex;
     align-items: center;
     font-size: 1.2rem;
-
     padding: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     background-color: #e8ebe7;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.6);
+}
+
+.task:hover {
+    transform: scale(1.003);
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+    transition: .2s;
 }
 
 .priority-flag-low, .priority-flag-medium, .priority-flag-high {
@@ -318,8 +322,8 @@ ul li {
 
 .create-new__close-btn {
     position: absolute;
-    top: 1.2rem;
-    right: 2rem;
+    top: 1.5rem;
+    right: 1.5rem;
     color: #fff;
     line-height: 1rem;
     font-size: 3rem;
@@ -564,7 +568,8 @@ ul li {
 .details-popup__title {
     font-size: 3.5rem;
     font-weight: 400;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
+    overflow-wrap: break-word;
 }
 
 .details-popup__details-container {
@@ -579,7 +584,8 @@ ul li {
 
 .details-popup__details-value{
     margin: .5rem;
-    height: 9rem;
+    height: 7rem;
+    overflow-wrap: break-word;
     overflow-y: auto;
 }
 
@@ -610,11 +616,28 @@ ul li {
     margin-left: 3rem;
 }
 
-.details-popup__priority-value {
+.DPPV-low {
+    color: green;
     margin-left: .5rem;
     text-transform: uppercase;
     font-weight: 700;
 }
+
+
+.DPPV-medium {
+    color: orange;
+    margin-left: .5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.DPPV-high {
+    color: red;
+    margin-left: .5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
 
 .details-popup__duedate-value {
     margin-left: .5rem;

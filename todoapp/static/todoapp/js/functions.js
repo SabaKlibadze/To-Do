@@ -162,8 +162,8 @@ function addTasksFromBase(task) {
     const taskDetails = document.createElement('div');
     taskDetails.textContent = 'details'
     taskDetails.classList.add('task-details-btn')
-    taskDetails.setAttribute('id', 'task-details-btn')
     taskDetails.addEventListener('click', () => toggleTaskDetailsPopup());
+    taskDetails.addEventListener('click', () => showTaskDetails(`${task.id}`));
 
     const taskDate = document.createElement('span');
     taskDate.classList.add('task-date');
@@ -191,6 +191,32 @@ function addTasksFromBase(task) {
     document.getElementById('task-container').appendChild(taskElement);
 }
 
+
+const taskDetilsCloseBtn = document.querySelector('.details-popup__close-btn')
+taskDetilsCloseBtn.addEventListener('click', () => {
+    toggleTaskDetailsPopup()
+});
+
+
+function showTaskDetails(taskId) {
+    fetch(`get_task_details/${taskId}/`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Task not found!');
+            return
+        }
+        const detailsModel = document.getElementById('details-popup__content');
+        detailsModel.querySelector('.details-popup__title').textContent = data.title;
+        detailsModel.querySelector('.details-popup__details-value').textContent = data.details;
+        detailsModel.querySelector('.details-popup__priority-value').textContent = data.priority;
+        detailsModel.querySelector('.details-popup__priority-value').classList.add(`DPPV-${data.priority}`);
+        detailsModel.querySelector('.details-popup__duedate-value').textContent = formatDate(data.due_date);
+    })
+    .catch((error) => {
+        console.error('Error:', error)
+    })
+}
 
 
 function deleteTask(taskId) {
