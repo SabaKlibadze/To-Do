@@ -45,7 +45,7 @@ function addTask(){
 
         const taskCheckbox = document.createElement('span');
         taskCheckbox.classList.add('task-checkbox');
-        taskCheckbox.addEventListener('click', e => e.target.classList.toggle('task-checkbox-checked'));
+        // taskCheckbox.addEventListener('click', e => e.target.classList.toggle('task-checkbox-checked'));
         
         const taskName = document.createElement('span');
         taskName.classList.add('task-name');
@@ -72,6 +72,10 @@ function addTask(){
         taskDelete.classList.add('task-delete');
         taskDelete.addEventListener('click', (e, count) => {
             e.target.parentElement.remove(), count = homeCount()})
+
+        taskCheckbox.addEventListener('click', () => {
+            taskChecker(task, taskCheckbox, taskName, taskDetails, taskDate);
+        })
 
         task.appendChild(priorityFlag)
         task.appendChild(taskCheckbox)
@@ -153,14 +157,7 @@ function addTasksFromBase(task) {
 
     const taskCheckbox = document.createElement('span');
     taskCheckbox.classList.add('task-checkbox');
-    if (`${task.completed}` === 'true') {
-        taskCheckbox.classList.add('task-checkbox-checked');
-    }
     taskCheckbox.setAttribute('id', `task${task.id}-checkbox`);
-    taskCheckbox.addEventListener('click', e => {
-        e.target.classList.toggle('task-checkbox-checked');
-        toggleTaskCompletion(`${task.id}`);
-    })
     
     const taskName = document.createElement('span');
     taskName.classList.add('task-name');
@@ -187,7 +184,20 @@ function addTasksFromBase(task) {
     taskDelete.addEventListener('click', (e) => {
         e.preventDefault(); 
         deleteTask(task.id);
-    });
+    })
+
+    if (`${task.completed}` === 'true') {
+        taskElement.classList.add('task-checked');
+        taskCheckbox.classList.add('task-checkbox-checked');
+        taskName.classList.add('task-name-checked');
+        taskDetails.classList.add('task-details-checked');
+        taskDate.classList.add('task-date-checked');
+    }
+
+    taskCheckbox.addEventListener('click', () => {
+        taskChecker(taskElement, taskCheckbox, taskName, taskDetails, taskDate);
+        toggleTaskCompletion(`${task.id}`);
+    })
 
     taskElement.appendChild(priorityFlag)
     taskElement.appendChild(taskCheckbox)
@@ -256,6 +266,14 @@ function toggleTaskCompletion(taskId) {
     .then(response => response.json())
 }
 
+
+function taskChecker(task, taskCheckbox, taskName, taskDetails, taskDate) {
+    task.classList.toggle('task-checked');
+    taskCheckbox.classList.toggle('task-checkbox-checked');
+    taskName.classList.toggle('task-name-checked');
+    taskDetails.classList.toggle('task-details-checked');
+    taskDate.classList.toggle('task-date-checked');
+}
 
 
 function deleteTask(taskId) {
