@@ -201,11 +201,6 @@ function addTasksFromBase(task) {
 }
 
 
-const taskDetilsCloseBtn = document.querySelector('.details-popup__close-btn')
-taskDetilsCloseBtn.addEventListener('click', () => {
-    toggleTaskDetailsPopup()
-});
-
 
 function showTaskDetails(taskId) {
     fetch(`get_task_details/${taskId}/`)
@@ -227,6 +222,21 @@ function showTaskDetails(taskId) {
     })
 }
 
+const taskDetilsCloseBtn = document.querySelector('.details-popup__close-btn');
+taskDetilsCloseBtn.addEventListener('click', () => {
+    removeDetailsPriorityClasslist();
+    toggleTaskDetailsPopup();
+});
+
+function removeDetailsPriorityClasslist() {
+    const priorityClass = document.querySelector('.details-popup__priority-value');
+    const secondClass = priorityClass.classList[1];
+    priorityClass.classList.remove(secondClass);
+}
+
+function toggleTaskDetailsPopup() {
+    document.getElementById("details-popup").classList.toggle("active");
+}
 
 
 function toggleTaskCompletion(taskId) {
@@ -274,10 +284,6 @@ function deleteTask(taskId) {
 
 function toggleNewTaskPopup() {
     document.getElementById("popup-new").classList.toggle("active");
-}
-
-function toggleTaskDetailsPopup() {
-    document.getElementById("details-popup").classList.toggle("active");
 }
 
 

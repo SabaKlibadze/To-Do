@@ -190,7 +190,7 @@ ul li {
     height: 1.5rem;
     width: 1.5rem;
     display: block;
-    background: url(../images/checkPNG.png);
+    background: url(../images/check.png);
     background-repeat: no-repeat;
     background-size: contain;
     background-color:#A1BE95;
@@ -255,7 +255,7 @@ ul li {
     border: none; 
     cursor: pointer; 
     color:  #6d250f;
-    background-image: url(../images/r2.png);
+    background-image: url(../images/edit.png);
     
 }
 
