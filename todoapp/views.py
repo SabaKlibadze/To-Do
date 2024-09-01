@@ -32,7 +32,7 @@ def add_task(request):
 
 
 def get_tasks(request):
-    tasks = Task.objects.all().values('id', 'title', 'due_date', 'priority')
+    tasks = Task.objects.all().values('id', 'title', 'due_date', 'priority', 'completed')
     return JsonResponse(list(tasks), safe=False)
 
 
@@ -48,6 +48,23 @@ def get_task_details(request, task_id):
         return JsonResponse(task_data)
     except Task.DoesNotExist:
         return JsonResponse({'error': 'Task not found!'}, status=404)
+
+
+
+def toggle_task_completion(request, task_id):
+    if request.method == 'POST':
+        try:
+            task = Task.objects.get(id=task_id)
+            data = json.loads(request.body)
+            task.completed = data.get('completed', False) 
+            task.save()
+            return JsonResponse({'completed': task.completed})
+        
+        except Task.DoesNotExist:
+            return JsonResponse({'error': 'Task not found'}, status=404)
+        
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 
 def delete_task(request, task_id):

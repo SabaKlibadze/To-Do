@@ -8,7 +8,7 @@ class Task(models.Model):
     due_date = models.DateField(default=date.today)
     priority = models.CharField(max_length=10, default='Low')
     details = models.TextField(blank=True, null=True)
-    completed = models.CharField(default='not completed',max_length=15)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f" - {self.title} - {self.due_date} - {self.priority} - {self.details} - {self.completed}"

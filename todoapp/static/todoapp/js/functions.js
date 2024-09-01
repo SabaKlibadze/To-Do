@@ -94,8 +94,8 @@ function addTask(){
                 priority: priorityFlag.classList.contains('priority-flag-high') ? 'high' :
                 priorityFlag.classList.contains('priority-flag-medium') ? 'medium' :
                     'low',
-                completed: taskCheckbox.classList.contains('checked') ? 'completed' :
-                    'not completed',
+                completed: taskCheckbox.classList.contains('checked') ? True :
+                    false,
                 title: taskName.textContent,
                 details: newTaskDetails.value,
                 due_date: dateInput, 
@@ -153,8 +153,15 @@ function addTasksFromBase(task) {
 
     const taskCheckbox = document.createElement('span');
     taskCheckbox.classList.add('task-checkbox');
-    taskCheckbox.addEventListener('click', e => e.target.classList.toggle('task-checkbox-checked'));
-
+    if (`${task.completed}` === 'true') {
+        taskCheckbox.classList.add('task-checkbox-checked');
+    }
+    taskCheckbox.setAttribute('id', `task${task.id}-checkbox`);
+    taskCheckbox.addEventListener('click', e => {
+        e.target.classList.toggle('task-checkbox-checked');
+        toggleTaskCompletion(`${task.id}`);
+    })
+    
     const taskName = document.createElement('span');
     taskName.classList.add('task-name');
     taskName.textContent = task.title;
@@ -162,8 +169,10 @@ function addTasksFromBase(task) {
     const taskDetails = document.createElement('div');
     taskDetails.textContent = 'details'
     taskDetails.classList.add('task-details-btn')
-    taskDetails.addEventListener('click', () => toggleTaskDetailsPopup());
-    taskDetails.addEventListener('click', () => showTaskDetails(`${task.id}`));
+    taskDetails.addEventListener('click', () => {
+        toggleTaskDetailsPopup();
+        showTaskDetails(`${task.id}`);
+    })
 
     const taskDate = document.createElement('span');
     taskDate.classList.add('task-date');
@@ -217,6 +226,26 @@ function showTaskDetails(taskId) {
         console.error('Error:', error)
     })
 }
+
+
+
+function toggleTaskCompletion(taskId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const checkboxElement = document.getElementById(`task${taskId}-checkbox`)
+
+    fetch(`/toggle_task_completion/${taskId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            completed: checkboxElement.classList.contains('task-checkbox-checked') 
+        })
+    })
+    .then(response => response.json())
+}
+
 
 
 function deleteTask(taskId) {
