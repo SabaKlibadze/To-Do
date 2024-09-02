@@ -97,10 +97,8 @@ createNewTaskCloseBtn.addEventListener('click', () => {
     toggleNewTaskPopup(); removeActivePriority()});
 
 // Create new task
-const addTaskBtn = document.getElementById('new-task-submit')
-addTaskBtn.addEventListener('click', () => {
-    createTask(); toggleNewTaskPopup()});
-
+document.getElementById('create-new').addEventListener('submit', (e) => {
+    e.preventDefault(); createTask(); toggleNewTaskPopup()});
 
 
 function createTask() {

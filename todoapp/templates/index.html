@@ -39,7 +39,7 @@
     </div>
     <div class="popup-new" id="popup-new">
         <div class="overlay"></div>
-        <form class="create-new" method="post">
+        <form class="create-new" id="create-new" method="post">
             {% csrf_token %}
             <div class="create-new__header">
                 <h2> Create new task... </h2>
@@ -50,7 +50,7 @@
                     <h1> // To-Do</h1>
                 </div>
                 <div class="create-new__imput">
-                    <textarea name="new-task" id="create-new__name" maxlength="30" placeholder="Task name:"></textarea>
+                    <textarea name="new-task" id="create-new__name" maxlength="30" placeholder="Task name:" required></textarea>
                     <textarea name="new-task-details" id="create-new__details" placeholder="Task details:"></textarea>
                     <div class="create-new-date">
                         <div class="create-new-date__title">Due Date:</div>
@@ -60,14 +60,14 @@
                         <div class="create-new-priority-and-submit">
                             <div class="create-new-priority">
                                 <div class="create_priority_title"> Priority: </div>
-                                <input type="radio" name="create-priority" id="create-priority-low" value="low" required checked>
+                                <input type="radio" name="create-priority" id="create-priority-low" value="low" required>
                                 <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
                                 <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
                                 <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
-                                <input type="radio" name="create-priority" id="create-priority-high" value="high">
+                                <input type="radio" name="create-priority" id="create-priority-high" value="high" required>
                                 <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
                             </div>
-                            <input type="button" id="new-task-submit" value="Add task">
+                            <input type="submit" id="new-task-submit" value="Add task">
                         </div>
                     </div>
                 </div>
