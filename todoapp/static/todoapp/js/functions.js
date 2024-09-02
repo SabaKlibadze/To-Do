@@ -1,144 +1,11 @@
 
-// _______________________________ TASKS CONTAINER ____________________________________
-
-
-// New task popup
-const  createNewTaskBTN= document.getElementById('create-new-task-btn')
-createNewTaskBTN.addEventListener('click', () => {
-    toggleNewTaskPopup()});
-
-// Close new task popup
-const createNewTaskCloseBtn = document.querySelector('.create-new__close-btn')
-createNewTaskCloseBtn.addEventListener('click', () => {
-    toggleNewTaskPopup(), removeActivePriority()});
-
-// Create new task
-const addTaskBtn = document.getElementById('new-task-submit')
-addTaskBtn.addEventListener('click', () => {
-    addTask(), toggleNewTaskPopup()});
-
-
-
-function addTask(){
-    const newTaskName = document.getElementById('create-new__name');
-    const newTaskDetails = document.getElementById('create-new__details');
-    const taskContainer = document.getElementById('task-container');
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-    if(newTaskName.value === ''){
-        alert('You must write something!')
-    }
-    else{
-
-        const task = document.createElement('div')
-        task.classList.add('task')
-        task.setAttribute('id', 'task');
-
-        const priorityFlag = document.createElement('div');
-        if (document.getElementById('create-priority-high').checked == true) {
-            priorityFlag.classList.add('priority-flag-high');
-        } else if (document.getElementById('create-priority-medium').checked == true) {
-            priorityFlag.classList.add('priority-flag-medium');
-        } else {
-            priorityFlag.classList.add('priority-flag-low');       
-        }
-
-        const taskCheckbox = document.createElement('span');
-        taskCheckbox.classList.add('task-checkbox');
-        // taskCheckbox.addEventListener('click', e => e.target.classList.toggle('task-checkbox-checked'));
-        
-        const taskName = document.createElement('span');
-        taskName.classList.add('task-name');
-        taskName.textContent = newTaskName.value;
-
-        const taskDetails = document.createElement('div');
-        taskDetails.setAttribute('type', 'button')
-        taskDetails.classList.add('task-details-btn')
-        taskDetails.setAttribute('id', 'task-details-btn')
-        taskDetails.textContent = 'details'
-        taskDetails.addEventListener('click', () => toggleTaskDetailsPopup());
-
-        const taskDate = document.createElement('span');
-        taskDate.classList.add('task-date');
-        const dateInput = document.getElementById('calendar').value;
-        const formattedDate = formatDate(dateInput);
-        taskDate.textContent = `${formattedDate}`;
-
-        const taskEdit = document.createElement('button');
-        taskEdit.classList.add('task-edit');
-
-
-        const taskDelete = document.createElement('button');
-        taskDelete.classList.add('task-delete');
-        taskDelete.addEventListener('click', (e, count) => {
-            e.target.parentElement.remove(), count = homeCount()})
-
-        taskCheckbox.addEventListener('click', () => {
-            taskChecker(task, taskCheckbox, taskName, taskDetails, taskDate);
-        })
-
-        task.appendChild(priorityFlag)
-        task.appendChild(taskCheckbox)
-        task.appendChild(taskName);
-        task.appendChild(taskDetails);
-        task.appendChild(taskDate);
-        task.appendChild(taskEdit);
-        task.appendChild(taskDelete);
-
-        taskContainer.appendChild(task);
-        homeCount()
-        
-        fetch('/add_task/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({
-                priority: priorityFlag.classList.contains('priority-flag-high') ? 'high' :
-                priorityFlag.classList.contains('priority-flag-medium') ? 'medium' :
-                    'low',
-                completed: taskCheckbox.classList.contains('checked') ? True :
-                    false,
-                title: taskName.textContent,
-                details: newTaskDetails.value,
-                due_date: dateInput, 
-
-            })
-       })
-       .then(response => response.json())
-       .then(data => {
-            console.log('Success:', data);
-       })
-       .catch((error) => {
-            console.log('Error:', error);
-       });
-    }
-
-    newTaskName.value = ''
-    // saveData()
-}
-
-
-
-// function saveData() {
-//     localStorage.setItem('data', taskContainer.innerHTML)
-// }
-
-// function showTasks() {
-//     taskContainer.innerHTML = localStorage.getItem('data')
-// }
-
-// showTasks()
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/get_tasks/')
         .then(response => response.json())
         .then(data => {
             data.forEach(task => {
-                addTasksFromBase(task);
+                addTaskToList(task);
             })
         homeCount()
         })    
@@ -147,29 +14,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-function addTasksFromBase(task) {
+function addTaskToList(task) {
+    const taskContainer = document.getElementById('task-container');
+    
     const taskElement = document.createElement('div');
     taskElement.classList.add('task');
     taskElement.setAttribute('id', `task-${task.id}`)
 
-    const priorityFlag = document.createElement('span');
-    priorityFlag.classList.add(`priority-flag-${task.priority.toLowerCase()}`);
+    const priorityFlag = document.createElement('div');
+    priorityFlag.classList.add(`priority-flag-${task.priority}`);
 
     const taskCheckbox = document.createElement('span');
     taskCheckbox.classList.add('task-checkbox');
     taskCheckbox.setAttribute('id', `task${task.id}-checkbox`);
-    
+
     const taskName = document.createElement('span');
     taskName.classList.add('task-name');
     taskName.textContent = task.title;
 
-    const taskDetails = document.createElement('div');
-    taskDetails.textContent = 'details'
-    taskDetails.classList.add('task-details-btn')
-    taskDetails.addEventListener('click', () => {
-        toggleTaskDetailsPopup();
-        showTaskDetails(`${task.id}`);
-    })
+    const taskDetailsBtn = document.createElement('div');
+    taskDetailsBtn.setAttribute('type', 'button');
+    taskDetailsBtn.classList.add('task-details-btn');
+    taskDetailsBtn.setAttribute('id', 'task-details-btn');
+    taskDetailsBtn.textContent = 'DETAILS';
 
     const taskDate = document.createElement('span');
     taskDate.classList.add('task-date');
@@ -180,35 +47,100 @@ function addTasksFromBase(task) {
 
     const taskDelete = document.createElement('button');
     taskDelete.classList.add('task-delete');
-    taskDelete.setAttribute('data-task-id', task.id);
+
+    taskCheckbox.addEventListener('click', () => {;
+        taskChecker(taskElement, taskCheckbox, taskName, taskDetailsBtn, taskDate);
+        toggleTaskCompletion(`${task.id}`);
+    })
+
+    taskDetailsBtn.addEventListener('click', () => {
+        toggleTaskDetailsPopup();
+        showTaskDetails(`${task.id}`);
+    })
+
     taskDelete.addEventListener('click', (e) => {
         e.preventDefault(); 
-        deleteTask(task.id);
+        deleteTask(`${task.id}`);
     })
 
     if (`${task.completed}` === 'true') {
         taskElement.classList.add('task-checked');
         taskCheckbox.classList.add('task-checkbox-checked');
         taskName.classList.add('task-name-checked');
-        taskDetails.classList.add('task-details-checked');
+        taskDetailsBtn.classList.add('task-details-checked');
         taskDate.classList.add('task-date-checked');
     }
-
-    taskCheckbox.addEventListener('click', () => {
-        taskChecker(taskElement, taskCheckbox, taskName, taskDetails, taskDate);
-        toggleTaskCompletion(`${task.id}`);
-    })
 
     taskElement.appendChild(priorityFlag)
     taskElement.appendChild(taskCheckbox)
     taskElement.appendChild(taskName);
-    taskElement.appendChild(taskDetails);
+    taskElement.appendChild(taskDetailsBtn);
     taskElement.appendChild(taskDate);
     taskElement.appendChild(taskEdit);
     taskElement.appendChild(taskDelete);
 
-    document.getElementById('task-container').appendChild(taskElement);
+    taskContainer.appendChild(taskElement);
+
+    homeCount();
 }
+
+
+
+// New task popup
+const  createNewTaskBTN= document.getElementById('create-new-task-btn')
+createNewTaskBTN.addEventListener('click', () => {
+    toggleNewTaskPopup(); removeActivePriority()});
+
+// Close new task popup
+const createNewTaskCloseBtn = document.querySelector('.create-new__close-btn')
+createNewTaskCloseBtn.addEventListener('click', () => {
+    toggleNewTaskPopup(); removeActivePriority()});
+
+// Create new task
+const addTaskBtn = document.getElementById('new-task-submit')
+addTaskBtn.addEventListener('click', () => {
+    createTask(); toggleNewTaskPopup()});
+
+
+
+function createTask() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+     
+    const newTaskName = document.getElementById('create-new__name');
+    const newTaskDetails = document.getElementById('create-new__details');
+    const priorityFlag = document.querySelector('input[name="create-priority"]:checked').value;
+    const dueDate = document.getElementById('create-new-date__duedate').value;
+    
+    const taskData = {
+        title: newTaskName.value,
+        details: newTaskDetails.value,
+        priority: priorityFlag,
+        due_date: dueDate,
+        completed: false,
+    };
+
+    fetch('/add_task/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(taskData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            addTaskToList(data.task);
+            newTaskName.value = '';
+            newTaskDetails.value = '';
+        } else {
+            console.error('Failed to add task:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}   
 
 
 

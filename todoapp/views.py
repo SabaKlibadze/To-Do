@@ -13,22 +13,22 @@ def add_task(request):
         data = json.loads(request.body)
         print(f"Received data: {data}")
         task = Task.objects.create(
-            title = data.get('title'),
-            details = data.get('details'),    
-            priority = data.get('priority'),        
-            due_date = data.get('due_date'),
-            completed = data.get('completed', False),
+            title = data['title'],
+            details = data['details'],    
+            priority = data['priority'],        
+            due_date = data['due_date'],
+            completed = False
         )
         print(f"Task created: {task}")
-        return JsonResponse({
+        return JsonResponse({'success': True, 'task': {
             'id': task.id, 
             'title': task.title, 
             'due_date': task.due_date, 
             'priority': task.priority,
             'details': task.details,
             'completed': task.completed,
-        })
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+        }})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
 def get_tasks(request):
