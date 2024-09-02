@@ -61,6 +61,11 @@ function addTaskToList(task) {
     taskDelete.addEventListener('click', (e) => {
         e.preventDefault(); 
         deleteTask(`${task.id}`);
+        
+        const delay = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds))
+        }
+        delay(50).then(() => homeCount());
     })
 
     if (`${task.completed}` === 'true') {
