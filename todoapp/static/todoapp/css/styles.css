@@ -821,7 +821,7 @@ body {
     justify-content: space-between;
 }
 
-.delete-popup__yes, .delete-popup__no {
+.delete-popup__yes, .delete-popup__cancel {
     font-size: 1rem;
     font-weight: 700;
     width: 6rem;
@@ -838,11 +838,11 @@ body {
     margin-left: 2rem;
 }
 
-.delete-popup__no {
+.delete-popup__cancel {
     margin-right: 2rem;
 }
 
-.delete-popup__yes:hover, .delete-popup__no:hover {
+.delete-popup__yes:hover, .delete-popup__cancel:hover {
     color: #fff;
     border: 1px solid #F98866;
     border-radius: 10%;

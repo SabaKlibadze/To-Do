@@ -51,7 +51,7 @@
         </div>
     </div>
     <div class="popup-new" id="popup-new">
-        <div class="overlay"></div>
+        <div class="overlay" id="overlay"></div>
         <form class="create-new" id="create-new" method="post">
             {% csrf_token %}
             <div class="create-new__header">
@@ -88,7 +88,7 @@
         </form>
     </div>
     <div class="details-popup" id="details-popup">
-        <div class="details-popup__overlay"></div>
+        <div class="details-popup__overlay" id="details-popup__overlay"></div>
             <div class="details-popup__container">
                 <div class="details-popup__close-btn">&times;</div>
                 <div class="details-popup__content" id="details-popup__content">
@@ -107,7 +107,7 @@
             </div>
     </div>
     <div class="delete-popup" id="delete-popup">
-        <div class="delete-popup__overlay"></div>
+        <div class="delete-popup__overlay" id="delete-popup__overlay"></div>
             <form class="delete-popup__container" id="delete-popup__container" method="post">
                 {% csrf_token %}
                 <span class="delete-popup__ask">Delete:</span>
@@ -116,7 +116,7 @@
                 </div>
                 <div class="delete-popup__btns">
                     <button class="delete-popup__yes">OK</button>
-                    <button class="delete-popup__no">Cancel</button>
+                    <button class="delete-popup__cancel" id="delete-popup__cancel">Cancel</button>
                     </div>
             </form>
     </div>

@@ -95,11 +95,57 @@ createNewTaskBTN.addEventListener('click', () => {
 // Close new task popup
 const createNewTaskCloseBtn = document.querySelector('.create-new__close-btn')
 createNewTaskCloseBtn.addEventListener('click', () => {
-    toggleNewTaskPopup(); removeActivePriority()});
+    toggleNewTaskPopup()});
+
+// Close popup if clicked outside of box
+const createNewTaskOverlay = document.getElementById('overlay');
+createNewTaskOverlay.addEventListener('click', (e) => {
+    if (e.target === createNewTaskOverlay) {
+        toggleNewTaskPopup();
+    }
+})
+
 
 // Create new task
 document.getElementById('create-new').addEventListener('submit', (e) => {
     e.preventDefault(); createTask(); toggleNewTaskPopup()});
+
+
+function toggleNewTaskPopup() {
+    document.getElementById("popup-new").classList.toggle("active");
+}
+
+
+function homeCount() {
+    const homeCount = document.querySelectorAll('.task');
+    const count = homeCount.length;
+
+    const projectCount = document.getElementById('project-count');
+    projectCount.textContent = count
+    return count.textContent;
+}
+
+
+const priorityBtns = document.querySelectorAll('.create-priority-btn');
+priorityBtns.forEach(btn =>
+    btn.addEventListener('click', e => 
+        activePriority(e)))
+
+
+function activePriority(e) {
+    removeActivePriority();
+    const priority = e.target.textContent.toLowerCase();
+    e.target.classList.add(`create-priority-btn--${priority}-active`);
+}
+
+
+function removeActivePriority() {
+    const Btns = document.querySelectorAll('.create-priority-btn')
+        Btns.forEach(btn => {
+            btn.classList.remove(`create-priority-btn--${btn.textContent.toLowerCase()}-active`)
+        })
+}
+
 
 
 function createTask() {
@@ -168,6 +214,14 @@ taskDetilsCloseBtn.addEventListener('click', () => {
     removeDetailsPriorityClasslist();
     toggleTaskDetailsPopup();
 });
+
+const detailsOverlay = document.getElementById('details-popup__overlay');
+detailsOverlay.addEventListener('click', (e) => {
+    if (e.target === detailsOverlay) {
+        removeDetailsPriorityClasslist();
+        toggleTaskDetailsPopup();
+    }
+})
 
 function removeDetailsPriorityClasslist() {
     const priorityClass = document.querySelector('.details-popup__priority-value');
@@ -243,14 +297,23 @@ function deleteConfirmation(taskId) {
     })
 }
 
+
+const deletePopupOverlay = document.getElementById('delete-popup__overlay');
+deletePopupOverlay.addEventListener('click', (e) => {
+    if (e.target === deletePopupOverlay) {
+        toggleDeletePopup();
+    }
+})
+
+document.getElementById('delete-popup__cancel').addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleDeletePopup();
+})
+
 function toggleDeletePopup() {
     document.getElementById("delete-popup").classList.toggle("active");
 }
 
-document.querySelector('.delete-popup__no').addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleDeletePopup();
-})
 
 
 
@@ -278,20 +341,6 @@ function deleteTask(taskId) {
 }
 
 
-function toggleNewTaskPopup() {
-    document.getElementById("popup-new").classList.toggle("active");
-}
-
-
-function homeCount() {
-    const homeCount = document.querySelectorAll('.task');
-    const count = homeCount.length;
-
-    const projectCount = document.getElementById('project-count');
-    projectCount.textContent = count
-    return count.textContent;
-}
-
 
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -302,28 +351,6 @@ function formatDate(dateString) {
                    (day === 2 || day === 22) ? 'nd' :
                    (day === 3 || day === 23) ? 'rd' : 'th';
     return `${month} ${day}${suffix}`;
-}
-
-
-
-const priorityBtns = document.querySelectorAll('.create-priority-btn');
-priorityBtns.forEach(btn =>
-    btn.addEventListener('click', e => 
-        activePriority(e)))
-
-
-function activePriority(e) {
-    removeActivePriority();
-    const priority = e.target.textContent.toLowerCase();
-    e.target.classList.add(`create-priority-btn--${priority}-active`);
-}
-
-
-function removeActivePriority() {
-    const Btns = document.querySelectorAll('.create-priority-btn')
-        Btns.forEach(btn => {
-            btn.classList.remove(`create-priority-btn--${btn.textContent.toLowerCase()}-active`)
-        })
 }
 
 
@@ -354,12 +381,10 @@ document.getElementById('project-home').addEventListener('click', () =>
     //today tasks
 function showTodayTasks() {
     const today = new Date().toISOString().split('T')[0];
-    console.log(today)
     const tasks = document.querySelectorAll('.task')
 
     tasks.forEach(task => {
         taskDueDate = task.getAttribute('due-date');
-        console.log(taskDueDate)
         if (taskDueDate === today) {
             task.style.display = 'flex';
         } else {
