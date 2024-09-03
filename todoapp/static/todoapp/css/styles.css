@@ -797,6 +797,7 @@ body {
 }
 
 .delete-popup__ask {
+    color: #6d250f;
     align-self: center;
 }
 
@@ -824,11 +825,10 @@ body {
     font-size: 1rem;
     font-weight: 700;
     width: 6rem;
-    padding: .1rem;
-    margin-left: 2rem;
+    padding: .3rem .1rem .2rem .1rem;
     cursor: pointer;
     border: 1px solid gray;
-    background-color: #fff1e1;
+    background-color: #f3eade;
     border-radius: 10%;
     align-items: center;
     transition: .2s;

@@ -14,22 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-const homeTodayWeek = document.querySelectorAll('.home-today-week');
-homeTodayWeek.forEach(option => {
-    option.addEventListener('click', () => {
-        homeTodayWeek.forEach(opt => opt.classList.remove('selected'));
-        option.classList.add('selected');
-    })
-})
-
-
-
 function addTaskToList(task) {
     const taskContainer = document.getElementById('task-container');
     
     const taskElement = document.createElement('div');
     taskElement.classList.add('task');
-    taskElement.setAttribute('id', `task-${task.id}`)
+    taskElement.setAttribute('id', `task-${task.id}`);
+    taskElement.setAttribute('due-date', task.due_date);
 
     const priorityFlag = document.createElement('div');
     priorityFlag.classList.add(`priority-flag-${task.priority}`);
@@ -239,6 +230,12 @@ function deleteConfirmation(taskId) {
             e.preventDefault();
             toggleDeletePopup();
             deleteTask(`${taskId}`);
+
+            // Task count delay
+            const delay = (milliseconds) => {
+                return new Promise(resolve => setTimeout(resolve, milliseconds))
+            }
+            delay(50).then(() => homeCount());
         })
     })
     .catch((error) => {
@@ -329,3 +326,74 @@ function removeActivePriority() {
         })
 }
 
+
+
+    //Home. Today, Week selecter
+const homeTodayWeek = document.querySelectorAll('.home-today-week');
+homeTodayWeek.forEach(option => {
+    option.addEventListener('click', () => {
+        homeTodayWeek.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+    })
+})
+
+
+    //Home tasks
+function showHomeTasks() {
+    const tasks = document.querySelectorAll('.task')
+
+    tasks.forEach(task => {
+        task.style.display = 'flex';
+    });
+}
+
+document.getElementById('project-home').addEventListener('click', () =>
+    showHomeTasks());
+
+
+    //today tasks
+function showTodayTasks() {
+    const today = new Date().toISOString().split('T')[0];
+    console.log(today)
+    const tasks = document.querySelectorAll('.task')
+
+    tasks.forEach(task => {
+        taskDueDate = task.getAttribute('due-date');
+        console.log(taskDueDate)
+        if (taskDueDate === today) {
+            task.style.display = 'flex';
+        } else {
+            task.style.display = 'none';
+        }
+    });
+}
+
+document.getElementById('project-today').addEventListener('click', () =>
+    showTodayTasks());
+
+
+    //Week tasks
+function showWeekTasks() {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); 
+
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    const tasks = document.querySelectorAll('.task');
+
+    tasks.forEach(task => {
+        const taskDueDate = new Date(task.getAttribute('due-date')); 
+        if (taskDueDate >= startOfWeek && taskDueDate <= endOfWeek) {
+            task.style.display = 'flex'; 
+        } else {
+            task.style.display = 'none'; 
+        }
+    });
+}
+
+document.getElementById('project-week').addEventListener('click', () =>
+    showWeekTasks());
