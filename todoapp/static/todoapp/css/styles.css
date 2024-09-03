@@ -53,30 +53,132 @@ body {
     position: relative;
 }
 
-ul li {
-    list-style: none;   
-}
 
-#nav {
+#navig {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start; 
     padding: 0;
+    margin-top: 2rem;
 }
 
 #home, #today, #week {
     display: flex;
-    font-size: 3rem;
-    font-weight: 700;
-    margin: 2.5rem 1rem;
-    cursor: pointer;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 } 
 
-.project-name {
-    margin-right: auto;
+.project-count {
+    font-size: 1.2rem;
+    color: #FFF;
+    background-color: #F98866;
+    padding: .1rem .3rem .2rem .3rem;
+    border: 1px solid #F98866;
+    border-radius: 20%;
+}
+
+.project-home, .project-today, .project-week {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1rem;
+    margin: 1.5rem 3rem;
+    cursor: pointer;
+    font-weight: 300;
+    font-size: 2rem;
 }
 
 
-#today, #week {
-    font-size: 2rem;
-    margin-left: 2rem;
+.project-flex-1 {
+    border-radius: 5px;
+    transition: 0.5s;
+}
+
+.project-home:hover span:nth-child(1) {
+    padding: 0 .6rem;
+    margin-left: 1rem;
+    font-weight: 700;
+    border: 1px solid #F98866;
+    border-left-width: 1rem;
+    border-radius: .5rem;
+    color: #F98866;
+}
+
+.project-home:hover span:nth-child(2) {
+    font-weight: 400;
+}
+
+.project-home.selected span:nth-child(1) {
+    padding: 0 .6rem;
+    margin-left: 1rem;
+    font-weight: 700;
+    border: 1px solid #F98866;
+    border-left-width: 1rem;
+    border-radius: .5rem;
+    color: #F98866;
+}
+
+.project-home.selected span:nth-child(2) {
+    font-weight: 400;
+}
+
+.project-today:hover span:nth-child(1) {
+    padding: 0 .8rem;
+    margin-left: 1rem;
+    font-weight: 700;
+    border: 1px solid #A1BE95;
+    border-left-width: 1rem;
+    border-radius: .5rem;
+    color: #A1BE95;
+}
+
+.project-today:hover span:nth-child(2) {
+    font-weight: 400;
+}
+
+.project-today.selected span:nth-child(1) {
+    padding: 0 .8rem;
+    margin-left: 1rem;
+    font-weight: 700;
+    border: 1px solid #A1BE95;
+    border-left-width: 1rem;
+    border-radius: .5rem;
+    color: #A1BE95;
+}
+
+.project-today.selected span:nth-child(2) {
+    font-weight: 400;
+}
+
+
+.project-week:hover span:nth-child(1) {
+    padding: 0 .3rem;
+    margin-left: 1rem;
+    font-weight: 700;
+    border: 1px solid #A1BE95;
+    border-left-width: 1rem;
+    border-radius: .5rem;
+    color: #A1BE95;
+}
+
+.project-week:hover span:nth-child(2) {
+    font-weight: 400;
+}
+
+.project-week.selected span:nth-child(1) {
+    padding: 0 .3rem;
+    margin-left: 1rem;
+    font-weight: 700;
+    border: 1px solid #A1BE95;
+    border-left-width: 1rem;
+    border-radius: .5rem;
+    color: #A1BE95;
+}
+
+.project-week.selected span:nth-child(2) {
+    font-weight: 400;
 }
 
 #create-new-task-btn {
@@ -106,9 +208,11 @@ ul li {
 .main_container {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-    padding: 4rem;
+    padding: 0 4rem;
     background-color: #fcf6ef;
     overflow-y: auto;
+    border-top: 4rem solid #fcf6ef;
+    border-bottom: 4rem solid #fcf6ef;
 }
 
 .main_container::-webkit-scrollbar {
@@ -117,16 +221,16 @@ ul li {
 
 
 .main_container::-webkit-scrollbar-track {
-    background: #fff;
+    background: #fff1e1;
 }
   
 .main_container::-webkit-scrollbar-thumb {
-    background: #39722f;
+    background: #F98866;
     border-radius: 5px;
 }
   
 .main_container::-webkit-scrollbar-thumb:hover {
-    background: #264d1f;
+    background: #ac563c;
 }
 
 .task-container {
@@ -139,8 +243,9 @@ ul li {
     align-items: center;
     font-size: 1.2rem;
     padding: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     background-color: #fff1e1;
+    height: 4rem;
 }
 
 .task:hover {
@@ -151,7 +256,7 @@ ul li {
 
 .priority-flag-low, .priority-flag-medium, .priority-flag-high {
     width: .5rem;
-    height: 5rem;
+    height: 4rem;
     margin-right: 1rem;
 }
 
@@ -170,8 +275,8 @@ ul li {
 
 .task-checkbox {
     margin-right: 1.5rem;
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.2rem;
+    width: 1.2rem;
     border: 2px solid #A1BE95;
     border-radius: 5px;
     cursor: pointer;
@@ -179,8 +284,8 @@ ul li {
 
 .task-checkbox-checked {
     margin-right: 1.5rem;
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.2rem;
+    width: 1.2rem;
     display: block;
     background: url(../images/check.png);
     background-repeat: no-repeat;
@@ -190,7 +295,8 @@ ul li {
 
 .task-name {
     margin-right:auto; 
-    font-weight: 600;
+    font-weight: 300;
+    font-size: 1.5rem;
 }
 
 .task-name-checked {
@@ -204,7 +310,7 @@ ul li {
     padding: .5rem 1rem;
     border: 1px solid #A1BE95;
     border-radius: 4px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: #A1BE95;
     text-transform: uppercase;
     font-weight: 900;
@@ -240,9 +346,8 @@ ul li {
 }
 
 .task-edit {
-    margin-right: .5rem;
-    height: 2.3rem;
-    width: 3.5rem;
+    height: 1.8rem;
+    width: 3rem;
     background: transparent;
     background-size: contain;
     background-repeat: no-repeat;
@@ -260,8 +365,8 @@ ul li {
 
 .task-delete {
     margin-right: 1.5rem;
-    height: 2.2rem;
-    width: 2.2rem;
+    height: 1.8rem;
+    width: 1.8rem;
     background: transparent;
     background-size: contain;
     background-repeat: no-repeat;

@@ -12,13 +12,26 @@
             TO-DO
         </header>
         <nav class="side_bar">
-            <ul id="nav">
+            <ul id="navig">
                 <li id="home"> 
-                    <span class="project-name" id="project-name"> // home </span>
+                    <h2 class="home-today-week project-home selected" id="project-home">
+                        <span class="project-flex-1 ">H</span>
+                        <span class="project-flex-2 ">ome</span>
+                    </h2>
                     <span class="project-count" id="project-count" > </span>
                 </li>
-                <li id="today"> // Today </li>
-                <li id="week"> // Week </li>
+                <li id="today">
+                    <h2 class="home-today-week project-today" id="project-today">
+                        <span class="project-flex-1">T</span>
+                        <span class="project-flex-2">oday</span>
+                    </h2>
+                </li>
+                <li id="week">
+                    <h2 class="home-today-week project-week" id="project-week">
+                        <span class="project-flex-1">W</span>
+                        <span class="project-flex-2">eek</span>
+                    </h2>
+                </li>
             </ul>
             <div id="create-new-task-btn" class="create-new-task-btn">+</div>
         </nav>
@@ -50,8 +63,8 @@
                     <h1> // To-Do</h1>
                 </div>
                 <div class="create-new__imput">
-                    <textarea name="new-task" id="create-new__name" maxlength="30" placeholder="Task name:" required></textarea>
-                    <textarea name="new-task-details" id="create-new__details" placeholder="Task details:"></textarea>
+                    <textarea name="new-task" id="create-new__name" maxlength="30" placeholder="Title:" required></textarea>
+                    <textarea name="new-task-details" id="create-new__details" placeholder="Details:"></textarea>
                     <div class="create-new-date">
                         <div class="create-new-date__title">Due Date:</div>
                         <input type="date" class="create-new-date__duedate" id="create-new-date__duedate" name="create-new-date__duedate" required>

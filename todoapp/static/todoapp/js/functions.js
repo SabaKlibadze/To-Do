@@ -14,6 +14,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+const homeTodayWeek = document.querySelectorAll('.home-today-week');
+homeTodayWeek.forEach(option => {
+    option.addEventListener('click', () => {
+        homeTodayWeek.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+    })
+})
+
+
+
 function addTaskToList(task) {
     const taskContainer = document.getElementById('task-container');
     
