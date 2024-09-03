@@ -106,6 +106,20 @@
                 </div>
             </div>
     </div>
+    <div class="delete-popup" id="delete-popup">
+        <div class="delete-popup__overlay"></div>
+            <form class="delete-popup__container" id="delete-popup__container" method="post">
+                {% csrf_token %}
+                <span class="delete-popup__ask">Delete:</span>
+                <div class="delete-popup__title-box">
+                    <span class="delete-popup__task-title"></span>
+                </div>
+                <div class="delete-popup__btns">
+                    <button class="delete-popup__yes">OK</button>
+                    <button class="delete-popup__no">Cancel</button>
+                    </div>
+            </form>
+    </div>
 <script src="../static/todoapp/js/functions.js"></script>
 </body>
 </html>

@@ -70,12 +70,7 @@ function addTaskToList(task) {
 
     taskDelete.addEventListener('click', (e) => {
         e.preventDefault(); 
-        deleteTask(`${task.id}`);
-        
-        const delay = (milliseconds) => {
-            return new Promise(resolve => setTimeout(resolve, milliseconds))
-        }
-        delay(50).then(() => homeCount());
+        deleteConfirmation(`${task.id}`);
     })
 
     if (`${task.completed}` === 'true') {
@@ -219,6 +214,47 @@ function taskChecker(task, taskCheckbox, taskName, taskDetails, taskDate) {
     taskDetails.classList.toggle('task-details-checked');
     taskDate.classList.toggle('task-date-checked');
 }
+
+
+function deleteConfirmation(taskId) {
+    fetch(`get_task_details/${taskId}/`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Task not found!');
+            return
+        }
+
+        const deleteModal = document.getElementById('delete-popup__container');
+        deleteModal.querySelector('.delete-popup__task-title').textContent = data.title;
+
+        toggleDeletePopup();
+
+        const deleteButton = deleteModal.querySelector('.delete-popup__yes');
+
+        // Remove existing event listener to avoid multiple bindings
+        deleteButton.replaceWith(deleteButton.cloneNode(true));
+
+        deleteModal.querySelector('.delete-popup__yes').addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleDeletePopup();
+            deleteTask(`${taskId}`);
+        })
+    })
+    .catch((error) => {
+        console.error('Error:', error)
+    })
+}
+
+function toggleDeletePopup() {
+    document.getElementById("delete-popup").classList.toggle("active");
+}
+
+document.querySelector('.delete-popup__no').addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleDeletePopup();
+})
+
 
 
 function deleteTask(taskId) {
