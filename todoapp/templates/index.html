@@ -90,12 +90,10 @@
     <div class="details-popup" id="details-popup">
         <div class="details-popup__overlay" id="details-popup__overlay"></div>
             <div class="details-popup__container">
-                <div class="details-popup__close-btn">&times;</div>
+                <div id="details-popup__close-btn">&times;</div>
                 <div class="details-popup__content" id="details-popup__content">
-                    <span class="details-popup__title"></span>
-                    <div class="details-popup__details-container">
-                        <span class="details-popup__details-span">Details:</span>
-                        <p class="details-popup__details-value"></p>
+                    <div class="details-popup__title"></div>
+                    <div class="details-popup__details">
                     </div>
                     <div class="details-popup__atributes">
                         <span class="details-popup__priority">Priority:</span>
@@ -104,6 +102,36 @@
                         <span class="details-popup__duedate-value"></span>
                     </div>
                 </div>
+            </div>
+    </div>
+    <div id="edit-popup">
+        <div id="edit-popup__overlay"></div>
+            <div id="edit-popup__container">
+                <div id="edit-popup__close-btn">&times;</div>
+                <form id="edit-popup__content" method="post">
+                    <!-- {% csrf_token %} -->
+                    <textarea  id="edit-popup__name" maxlength="30" placeholder="Title:" required></textarea>
+                    <textarea  id="edit-popup__details" placeholder="Details:"></textarea>
+                    <div class="create-new-date">
+                        <div class="edit-popup__date-title">Due Date:</div>
+                        <input type="date" class="edit-popup__date-duedate" id="edit-popup__date-duedate" name="create-new-date__duedate" required>
+                    </div>
+                    <div class="edit-popup__atributes">
+                        <div class="edit-popup__priority-and-submit">
+                            <div class="create-new-priority">
+                                <div class="create_priority_title"> Priority: </div>
+                                <input type="radio" name="create-priority" id="create-priority-low" value="low" required>
+                                <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
+                                <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
+                                <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
+                                <input type="radio" name="create-priority" id="create-priority-high" value="high" required>
+                                <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
+                            </div>
+                            <input type="submit" id="edit-popup__submit" value="CONFIRM EDIT">
+                        </div>
+                    </div>
+
+                </form>
             </div>
     </div>
     <div class="delete-popup" id="delete-popup">

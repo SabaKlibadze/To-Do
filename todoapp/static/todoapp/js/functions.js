@@ -59,6 +59,11 @@ function addTaskToList(task) {
         showTaskDetails(`${task.id}`);
     })
 
+    taskEdit.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleTaskEditPopup();
+    })
+
     taskDelete.addEventListener('click', (e) => {
         e.preventDefault(); 
         deleteConfirmation(`${task.id}`);
@@ -199,7 +204,7 @@ function showTaskDetails(taskId) {
         }
         const detailsModel = document.getElementById('details-popup__content');
         detailsModel.querySelector('.details-popup__title').textContent = data.title;
-        detailsModel.querySelector('.details-popup__details-value').textContent = data.details;
+        detailsModel.querySelector('.details-popup__details').textContent = data.details;
         detailsModel.querySelector('.details-popup__priority-value').textContent = data.priority;
         detailsModel.querySelector('.details-popup__priority-value').classList.add(`DPPV-${data.priority}`);
         detailsModel.querySelector('.details-popup__duedate-value').textContent = formatDate(data.due_date);
@@ -209,7 +214,7 @@ function showTaskDetails(taskId) {
     })
 }
 
-const taskDetilsCloseBtn = document.querySelector('.details-popup__close-btn');
+const taskDetilsCloseBtn = document.getElementById('details-popup__close-btn');
 taskDetilsCloseBtn.addEventListener('click', () => {
     removeDetailsPriorityClasslist();
     toggleTaskDetailsPopup();
@@ -232,6 +237,28 @@ function removeDetailsPriorityClasslist() {
 function toggleTaskDetailsPopup() {
     document.getElementById("details-popup").classList.toggle("active");
 }
+
+
+
+
+
+const taskEditCloseBtn = document.getElementById('edit-popup__close-btn');
+taskEditCloseBtn.addEventListener('click', () => {
+    toggleTaskEditPopup();
+});
+
+const editOverlay = document.getElementById('edit-popup__overlay');
+editOverlay.addEventListener('click', (e) => {
+    if (e.target === editOverlay) {
+        toggleTaskEditPopup();
+    }
+})
+
+function toggleTaskEditPopup() {
+    document.getElementById("edit-popup").classList.toggle("active");
+}
+
+
 
 
 function toggleTaskCompletion(taskId) {
