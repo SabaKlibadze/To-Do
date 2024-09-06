@@ -23,6 +23,7 @@ function addTaskToList(task) {
     taskElement.setAttribute('due-date', task.due_date);
 
     const priorityFlag = document.createElement('div');
+    priorityFlag.classList.add('flag')
     priorityFlag.classList.add(`priority-flag-${task.priority}`);
 
     const taskCheckbox = document.createElement('span');
@@ -61,6 +62,7 @@ function addTaskToList(task) {
 
     taskEdit.addEventListener('click', (e) => {
         e.preventDefault();
+        editTask(`${task.id}`)
         toggleTaskEditPopup();
     })
 
@@ -149,6 +151,10 @@ function removeActivePriority() {
         Btns.forEach(btn => {
             btn.classList.remove(`create-priority-btn--${btn.textContent.toLowerCase()}-active`)
         })
+    const radioBtns = document.querySelectorAll('input[type="radio"]');
+        radioBtns.forEach(btn => {
+            btn.checked = false
+        })
 }
 
 
@@ -159,13 +165,13 @@ function createTask() {
     const newTaskName = document.getElementById('create-new__name');
     const newTaskDetails = document.getElementById('create-new__details');
     const priorityFlag = document.querySelector('input[name="create-priority"]:checked').value;
-    const dueDate = document.getElementById('create-new-date__duedate').value;
+    const dueDate = document.getElementById('create-new-date__duedate');
     
     const taskData = {
         title: newTaskName.value,
         details: newTaskDetails.value,
         priority: priorityFlag,
-        due_date: dueDate,
+        due_date: dueDate.value,
         completed: false,
     };
 
@@ -183,6 +189,7 @@ function createTask() {
             addTaskToList(data.task);
             newTaskName.value = '';
             newTaskDetails.value = '';
+            dueDate.value = '';
         } else {
             console.error('Failed to add task:', data.error);
         }
@@ -239,6 +246,97 @@ function toggleTaskDetailsPopup() {
 }
 
 
+
+function editTask(taskId) {
+    fetch(`get_task_details/${taskId}/`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Task not found!');
+            return
+        }
+
+        removeActivePriority();
+
+        const editModal = document.getElementById('edit-popup__content');
+        editModal.querySelector('#edit-popup__name').value = data.title;
+        editModal.querySelector('#edit-popup__details').value = data.details;
+        editModal.querySelector('#edit-popup__date-duedate').value = data.due_date;
+        const priorityBtns = editModal.querySelectorAll('input[type="radio"]');
+        priorityBtns.forEach(btn => {
+            const btnValue = btn.value; 
+            const BtnLabel = editModal.querySelector(`.create-priority-btn--${btnValue}`)
+            if (btnValue === data.priority) {
+                btn.checked = true;
+                BtnLabel.classList.add(`create-priority-btn--${btnValue}-active`);
+            }
+
+        const confirmEditBtn = editModal.querySelector('#edit-popup__submit');
+
+        // Remove existing event listener to avoid multiple bindings
+        confirmEditBtn.replaceWith(confirmEditBtn.cloneNode(true));
+
+        editModal.querySelector('.edit-popup__submit').addEventListener('click', (e) => {
+            e.preventDefault();
+            updateTask(`${taskId}`);
+        })
+        })
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+
+function updateTask(taskId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const updatedTask = document.getElementById('edit-popup__content');
+    const updatedTitle = updatedTask.querySelector('#edit-popup__name').value;
+    const updatedDetails = updatedTask.querySelector('#edit-popup__details').value
+    const updatedDuedate = updatedTask.querySelector('#edit-popup__date-duedate').value;
+    const updatedPriority = updatedTask.querySelector('input[name="create-priority"]:checked').value
+
+    const updatedData = {
+        title: updatedTitle,
+        details: updatedDetails,
+        due_date: updatedDuedate,
+        priority: updatedPriority,
+    }
+
+    fetch(`/update_task/${taskId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(updatedData)
+    })
+    .then(response => {
+        if(response.ok) {
+            updateTaskUI(taskId, updatedTitle, updatedDuedate, updatedPriority);
+            toggleTaskEditPopup();
+        } else {
+            console.error('Failed to delete task');
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    })
+}
+
+function  updateTaskUI(taskId, updatedTitle, updatedDuedate, updatedPriority) {
+    const editedTask = document.getElementById(`task-${taskId}`);
+    editedTask.querySelector('.task-name').textContent = updatedTitle;
+    editedTask.querySelector('.task-date').textContent = formatDate(updatedDuedate);
+    priorityFlag = editedTask.querySelector('.flag');
+
+    // Remove old priority
+    priorityFlag.classList.remove(priorityFlag.classList[1]);
+
+    //Add new priority
+    priorityFlag.classList.add(`priority-flag-${updatedPriority}`);
+}
 
 
 

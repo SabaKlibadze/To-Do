@@ -67,6 +67,24 @@ def toggle_task_completion(request, task_id):
 
 
 
+def update_task(request, task_id):
+    if request.method == 'POST':
+        try:
+            task = Task.objects.get(id=task_id)
+            data = json.loads(request.body)
+            print(f"Received data: {data}")
+            task.title = data['title']
+            task.details = data['details']
+            task.due_date = data['due_date']
+            task.priority = data['priority']
+            task.save()
+            return JsonResponse({'message': 'Task updated successfully!'}, status=200)
+        except Task.DoesNotExist:
+            return JsonResponse({'error': 'Task not found!'}, status=404)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+        
+
+
 def delete_task(request, task_id):
     if request.method == 'POST':
         try:

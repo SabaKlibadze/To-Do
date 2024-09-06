@@ -38,15 +38,6 @@
         <div class="main_container">
             <form class="task-container" id="task-container" method="post">
                 {% csrf_token %}
-                <!-- <div class="task" id="task">
-                    <span class="priority-flag-medium"></span>
-                    <span class="task-checkbox"></span>
-                    <span class="task-name"> Donec fringilla quam </span>
-                    <div class="task-details-btn" id="task-details-btn"> details </div>
-                    <span class="task-date"> Aug 28th </span>
-                    <button class="task-edit"></button>
-                    <button class="task-delete"></button>
-                </div> -->
             </form>
         </div>
     </div>
@@ -109,7 +100,7 @@
             <div id="edit-popup__container">
                 <div id="edit-popup__close-btn">&times;</div>
                 <form id="edit-popup__content" method="post">
-                    <!-- {% csrf_token %} -->
+                    {% csrf_token %}
                     <textarea  id="edit-popup__name" maxlength="30" placeholder="Title:" required></textarea>
                     <textarea  id="edit-popup__details" placeholder="Details:"></textarea>
                     <div class="create-new-date">
@@ -120,14 +111,14 @@
                         <div class="edit-popup__priority-and-submit">
                             <div class="create-new-priority">
                                 <div class="create_priority_title"> Priority: </div>
-                                <input type="radio" name="create-priority" id="create-priority-low" value="low" required>
-                                <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
-                                <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
-                                <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
-                                <input type="radio" name="create-priority" id="create-priority-high" value="high" required>
-                                <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
+                                <input type="radio" name="create-priority" id="edit-priority-low" value="low" required>
+                                <label for="edit-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
+                                <input type="radio" name="create-priority" id="edit-priority-medium" value="medium" required>
+                                <label for="edit-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
+                                <input type="radio" name="create-priority" id="edit-priority-high" value="high" required>
+                                <label for="edit-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
                             </div>
-                            <input type="submit" id="edit-popup__submit" value="CONFIRM EDIT">
+                            <input type="submit" id="edit-popup__submit" class="edit-popup__submit" value="CONFIRM EDIT">
                         </div>
                     </div>
 
