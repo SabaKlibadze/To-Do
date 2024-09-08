@@ -77,7 +77,7 @@ body {
     width: 100%;
 } 
 
-.project-count {
+.home-count, .today-count, .week-count {
     font-size: 1.2rem;
     color: #FFF;
     background-color: #92B4EC;

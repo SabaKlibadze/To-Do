@@ -42,6 +42,8 @@ function addTaskToList(task) {
 
     const taskDate = document.createElement('span');
     taskDate.classList.add('task-date');
+    TodayTasksClass(taskElement, `${task.due_date}`);
+    WeekTasksClass(taskElement, `${task.due_date}`);
     taskDate.textContent = formatDate(task.due_date);
 
     const taskEdit = document.createElement('button');
@@ -125,12 +127,29 @@ function toggleNewTaskPopup() {
 
 
 function homeCount() {
-    const homeCount = document.querySelectorAll('.task');
-    const count = homeCount.length;
+    const tasks = document.querySelectorAll('.task');
+    const taskscount = tasks.length;
+    const homeCount = document.getElementById('home-count');
+    if (taskscount == 0) {
+        homeCount.textContent = 0;
+    } else {
+        homeCount.textContent = taskscount;
+    }
 
-    const projectCount = document.getElementById('project-count');
-    projectCount.textContent = count
-    return count.textContent;
+    const todayCount = document.getElementById('today-count');
+    const weekCount = document.getElementById('week-count');
+    let today = 0;
+    let week = 0;
+    tasks.forEach(task => {
+        if (task.classList.contains('today')) {
+            today += 1;
+        }
+        else if (task.classList.contains('week')) {
+            week += 1;
+        }
+    })
+    todayCount.textContent = today;
+    weekCount.textContent = today + week;
 }
 
 
@@ -508,18 +527,23 @@ document.getElementById('project-home').addEventListener('click', () =>
 
 
     //today tasks
-function showTodayTasks() {
+function TodayTasksClass(taskElement, taskDueDate) {
     const today = new Date().toISOString().split('T')[0];
-    const tasks = document.querySelectorAll('.task')
+    if (taskDueDate === today) {
+        taskElement.classList.add('today');
+    }
+}
+
+function showTodayTasks() {
+    const tasks = document.querySelectorAll('.task');
 
     tasks.forEach(task => {
-        taskDueDate = task.getAttribute('due-date');
-        if (taskDueDate === today) {
+        if (task.classList.contains('today')) {
             task.style.display = 'flex';
         } else {
             task.style.display = 'none';
         }
-    });
+    })
 }
 
 document.getElementById('project-today').addEventListener('click', () =>
@@ -527,7 +551,7 @@ document.getElementById('project-today').addEventListener('click', () =>
 
 
     //Week tasks
-function showWeekTasks() {
+function WeekTasksClass(taskElement, taskDueDate) {
     const today = new Date();
     const dayOfWeek = today.getDay(); 
 
@@ -537,16 +561,23 @@ function showWeekTasks() {
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
 
+    const DueDate = new Date(taskDueDate);
+ 
+    if (DueDate >= startOfWeek && DueDate <= endOfWeek) {
+        taskElement.classList.add('week'); 
+    }
+}
+
+function showWeekTasks() {
     const tasks = document.querySelectorAll('.task');
 
     tasks.forEach(task => {
-        const taskDueDate = new Date(task.getAttribute('due-date')); 
-        if (taskDueDate >= startOfWeek && taskDueDate <= endOfWeek) {
-            task.style.display = 'flex'; 
+        if (task.classList.contains('week')) {
+            task.style.display = 'flex';
         } else {
-            task.style.display = 'none'; 
+            task.style.display = 'none';
         }
-    });
+    })
 }
 
 document.getElementById('project-week').addEventListener('click', () =>
