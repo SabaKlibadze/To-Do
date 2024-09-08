@@ -44,6 +44,9 @@ body {
     border-radius: .4rem .4rem 0 0;
 }
 
+.logo {
+    height: 5rem;
+}
 
 /* ___________________________________ SIDEBAR ___________________________________ */
 
@@ -499,6 +502,7 @@ body {
     margin: 0 1rem;
     padding: .5rem 1rem;
     border-radius: .3rem;
+    background: rgb(255 255 255 / 60%);
     text-align: center;
     cursor: pointer;
     transition: all, .3s;
