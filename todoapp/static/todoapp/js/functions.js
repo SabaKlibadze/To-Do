@@ -119,7 +119,8 @@ document.getElementById('create-new').addEventListener('submit', (e) => {
 
 
 function toggleNewTaskPopup() {
-    document.getElementById("popup-new").classList.toggle("active");
+    document.getElementById("overlay").classList.toggle("hidden");
+    document.getElementById("create-new").classList.toggle("active");
 }
 
 
@@ -242,7 +243,8 @@ function removeDetailsPriorityClasslist() {
 }
 
 function toggleTaskDetailsPopup() {
-    document.getElementById("details-popup").classList.toggle("active");
+    document.querySelector(".details-popup__container").classList.toggle("active");
+    document.getElementById("details-popup__overlay").classList.toggle("hidden");
 }
 
 
@@ -353,7 +355,8 @@ editOverlay.addEventListener('click', (e) => {
 })
 
 function toggleTaskEditPopup() {
-    document.getElementById("edit-popup").classList.toggle("active");
+    document.getElementById("edit-popup__container").classList.toggle("active");
+    document.getElementById("edit-popup__overlay").classList.toggle("hidden");
 }
 
 
@@ -436,7 +439,8 @@ document.getElementById('delete-popup__cancel').addEventListener('click', (e) =>
 })
 
 function toggleDeletePopup() {
-    document.getElementById("delete-popup").classList.toggle("active");
+    document.getElementById("delete-popup__container").classList.toggle("active");
+    document.getElementById("delete-popup__overlay").classList.toggle("hidden");
 }
 
 

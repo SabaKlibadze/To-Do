@@ -10,6 +10,7 @@
     <div class="content">
         <header class="header">
             TO-DO
+            <!-- <div id="menu-btn" onclick="showSidebar()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></div> -->
         </header>
         <nav class="side_bar">
             <ul id="navig">
@@ -41,14 +42,10 @@
             </form>
         </div>
     </div>
-    <div class="popup-new" id="popup-new">
-        <div class="overlay" id="overlay"></div>
+    <div class="overlay hidden" id="overlay">
         <form class="create-new" id="create-new" method="post">
             {% csrf_token %}
-            <div class="create-new__header">
-                <h2> Create new task... </h2>
-                <div  class="create-new__close-btn">&times;</div>
-            </div>
+            <div  class="create-new__close-btn">&times;</div>
             <div class="create-new__content-box"> 
                 <div class="create-new__sidebar">
                     <h1> // To-Do</h1>
@@ -78,66 +75,63 @@
             </div>
         </form>
     </div>
-    <div class="details-popup" id="details-popup">
-        <div class="details-popup__overlay" id="details-popup__overlay"></div>
-            <div class="details-popup__container">
-                <div id="details-popup__close-btn">&times;</div>
-                <div class="details-popup__content" id="details-popup__content">
-                    <div class="details-popup__title"></div>
-                    <div class="details-popup__details">
-                    </div>
-                    <div class="details-popup__atributes">
-                        <span class="details-popup__priority">Priority:</span>
-                        <span class="details-popup__priority-value"></span>
-                        <span class="details-popup__duedate">Due Date:</span>
-                        <span class="details-popup__duedate-value"></span>
-                    </div>
+    <div class="details-popup__overlay hidden" id="details-popup__overlay">
+        <div class="details-popup__container">
+            <div id="details-popup__close-btn">&times;</div>
+            <div class="details-popup__content" id="details-popup__content">
+                <div class="details-popup__title"></div>
+                <div class="details-popup__details">
+                </div>
+                <div class="details-popup__atributes">
+                    <span class="details-popup__priority">Priority:</span>
+                    <span class="details-popup__priority-value"></span>
+                    <span class="details-popup__duedate">Due Date:</span>
+                    <span class="details-popup__duedate-value"></span>
                 </div>
             </div>
+        </div>
     </div>
-    <div id="edit-popup">
-        <div id="edit-popup__overlay"></div>
-            <div id="edit-popup__container">
-                <div id="edit-popup__close-btn">&times;</div>
-                <form id="edit-popup__content" method="post">
-                    {% csrf_token %}
-                    <textarea  id="edit-popup__name" maxlength="30" placeholder="Title:" required></textarea>
-                    <textarea  id="edit-popup__details" placeholder="Details:"></textarea>
-                    <div class="create-new-date">
-                        <div class="edit-popup__date-title">Due Date:</div>
-                        <input type="date" class="edit-popup__date-duedate" id="edit-popup__date-duedate" name="create-new-date__duedate" required>
-                    </div>
-                    <div class="edit-popup__atributes">
-                        <div class="edit-popup__priority-and-submit">
-                            <div class="create-new-priority">
-                                <div class="create_priority_title"> Priority: </div>
-                                <input type="radio" name="create-priority" id="edit-priority-low" value="low" required>
-                                <label for="edit-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
-                                <input type="radio" name="create-priority" id="edit-priority-medium" value="medium" required>
-                                <label for="edit-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
-                                <input type="radio" name="create-priority" id="edit-priority-high" value="high" required>
-                                <label for="edit-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
-                            </div>
-                            <input type="submit" id="edit-popup__submit" class="edit-popup__submit" value="CONFIRM EDIT">
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-    </div>
-    <div class="delete-popup" id="delete-popup">
-        <div class="delete-popup__overlay" id="delete-popup__overlay"></div>
-            <form class="delete-popup__container" id="delete-popup__container" method="post">
+    <div id="edit-popup__overlay" class="edit-popup__overlay hidden">
+        <div id="edit-popup__container" class="edit-popup__container">
+            <div id="edit-popup__close-btn">&times;</div>
+            <form id="edit-popup__content" method="post">
                 {% csrf_token %}
-                <span class="delete-popup__ask">Delete:</span>
-                <div class="delete-popup__title-box">
-                    <span class="delete-popup__task-title"></span>
+                <textarea  id="edit-popup__name" maxlength="30" placeholder="Title:" required></textarea>
+                <textarea  id="edit-popup__details" placeholder="Details:"></textarea>
+                <div class="create-new-date">
+                    <div class="edit-popup__date-title">Due Date:</div>
+                    <input type="date" class="edit-popup__date-duedate" id="edit-popup__date-duedate" name="create-new-date__duedate" required>
                 </div>
-                <div class="delete-popup__btns">
-                    <button class="delete-popup__yes">OK</button>
-                    <button class="delete-popup__cancel" id="delete-popup__cancel">Cancel</button>
+                <div class="edit-popup__atributes">
+                    <div class="edit-popup__priority-and-submit">
+                        <div class="create-new-priority">
+                            <div class="create_priority_title"> Priority: </div>
+                            <input type="radio" name="create-priority" id="edit-priority-low" value="low" required>
+                            <label for="edit-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
+                            <input type="radio" name="create-priority" id="edit-priority-medium" value="medium" required>
+                            <label for="edit-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
+                            <input type="radio" name="create-priority" id="edit-priority-high" value="high" required>
+                            <label for="edit-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
+                        </div>
+                        <input type="submit" id="edit-popup__submit" class="edit-popup__submit" value="CONFIRM EDIT">
                     </div>
+                </div>
+
             </form>
+        </div>
+    </div>
+    <div class="delete-popup__overlay hidden" id="delete-popup__overlay">
+        <form class="delete-popup__container" id="delete-popup__container" method="post">
+            {% csrf_token %}
+            <span class="delete-popup__ask">Delete:</span>
+            <div class="delete-popup__title-box">
+                <span class="delete-popup__task-title"></span>
+            </div>
+            <div class="delete-popup__btns">
+                <button class="delete-popup__cancel" id="delete-popup__cancel">Cancel</button>
+                <button class="delete-popup__yes">Delete</button>
+            </div>
+        </form>
     </div>
 <script src="../static/todoapp/js/functions.js"></script>
 </body>
