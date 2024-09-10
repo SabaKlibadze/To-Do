@@ -582,3 +582,13 @@ function showWeekTasks() {
 
 document.getElementById('project-week').addEventListener('click', () =>
     showWeekTasks());
+
+
+const sidebar = document.getElementById('side_bar');
+document.getElementById('menu_checkbox').addEventListener('change', (e) => {
+    if (e.target.checked) {
+        sidebar.classList.add('active');
+    } else {
+        sidebar.classList.remove('active')
+    }
+})
