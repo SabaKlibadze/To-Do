@@ -592,3 +592,31 @@ document.getElementById('menu_checkbox').addEventListener('change', (e) => {
         sidebar.classList.remove('active')
     }
 })
+
+document.getElementById('sign-in__home-btn').addEventListener('click', () => {
+    toggleSignInPopup()
+})
+
+const signInPopupOverlay = document.getElementById('create-user__overlay');
+signInPopupOverlay.addEventListener('click', (e) => {
+    if (e.target === signInPopupOverlay) {
+        toggleSignInPopup();
+    }
+})
+
+function toggleSignInPopup() {
+    document.getElementById('create-user__container').classList.toggle('open');
+    document.getElementById('create-user__overlay').classList.toggle('hidden');
+}
+
+const container = document.getElementById('create-user__container');
+const registerBtn = document.getElementById('register');
+const loginBtn = document.getElementById('login');
+
+registerBtn.addEventListener('click', () => {
+    container.classList.add("active");
+});
+
+loginBtn.addEventListener('click', () => {
+    container.classList.remove("active");
+});

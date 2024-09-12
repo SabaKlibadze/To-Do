@@ -11,6 +11,7 @@
     <div class="content">
         <header class="header">
             <img src="../static/todoapp/images/logo.png" alt="logo" class="logo">
+            <input type="button" class="sign-in__home-btn" id="sign-in__home-btn" value="SIGN IN">
             <input type="checkbox" id="menu_checkbox">
             <div class="menu">
                 <span class="top_line common"></span>
@@ -140,6 +141,40 @@
                 <button class="delete-popup__yes">Delete</button>
             </div>
         </form>
+    </div>
+    <div class="create-user__overlay hidden" id="create-user__overlay">
+        <div class="create-user__container" id="create-user__container">
+            <div class="form-container sign-up">
+                <form>
+                    <h1>Create Account</h1>
+                    <input type="text" placeholder="Name">
+                    <input type="email" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <button>Sign Up</button>
+                </form>
+            </div>
+            <div class="form-container sign-in">
+                <form>
+                    <h1>Sign In</h1>
+                    <input type="email" placeholder="Email">
+                    <input type="password" placeholder="Password">
+                    <button>Sign In</button>
+                </form>
+            </div>
+            <div class="toggle-container">
+                <div class="toggle">
+                    <div class="toggle-panel toggle-left">
+                        <h2>Welcome Back!</h2>
+                        <button class="hidden" id="login">Sign In</button>
+                    </div>
+                    <div class="toggle-panel toggle-right">
+                        <h2>Hello, Friend!</h2>
+                        <p>Register to use all features</p>
+                        <button class="hidden" id="register">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 <script src="../static/todoapp/js/functions.js"></script>
 </body>
