@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 from . models import Task
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm
+from django.middleware.csrf import get_token
 
 def index(request):
     return render(request, "index.html")
@@ -126,3 +127,17 @@ def user_login(request):
         else:
             return JsonResponse({'success': False, 'error': 'Invalid credentials'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+def user_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+def get_new_csrf_token(request):
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})

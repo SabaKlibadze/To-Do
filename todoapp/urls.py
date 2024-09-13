@@ -11,4 +11,6 @@ urlpatterns = [
     path('toggle_task_completion/<int:task_id>/', views.toggle_task_completion, name='toggle_task_completion'),
     path('register/', views.register, name='register'),
     path('user_login/', views.user_login, name='user_login'),
+    path('user_logout/', views.user_logout, name='user_logout'),
+    path('get_new_csrf_token/', views.get_new_csrf_token, name='get_new_csrf_token'),
 ]

@@ -1,4 +1,4 @@
-
+let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/get_tasks/')
@@ -180,8 +180,6 @@ function removeActivePriority() {
 
 
 function createTask() {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-     
     const newTaskName = document.getElementById('create-new__name');
     const newTaskDetails = document.getElementById('create-new__details');
     const priorityFlag = document.querySelector('input[name="create-priority"]:checked').value;
@@ -310,8 +308,6 @@ function editTask(taskId) {
 
 
 function updateTask(taskId) {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
     const updatedTask = document.getElementById('edit-popup__content');
     const updatedTitle = updatedTask.querySelector('#edit-popup__name').value;
     const updatedDetails = updatedTask.querySelector('#edit-popup__details').value
@@ -382,7 +378,6 @@ function toggleTaskEditPopup() {
 
 
 function toggleTaskCompletion(taskId) {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     const checkboxElement = document.getElementById(`task${taskId}-checkbox`)
 
     fetch(`/toggle_task_completion/${taskId}/`, {
@@ -466,8 +461,6 @@ function toggleDeletePopup() {
 
 
 function deleteTask(taskId) {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
     fetch(`/delete_task/${taskId}/`, {
         method: 'POST',
         headers: {
@@ -593,7 +586,9 @@ document.getElementById('menu_checkbox').addEventListener('change', (e) => {
     }
 })
 
-document.getElementById('sign-in__home-btn').addEventListener('click', () => {
+const signInBtn = document.getElementById('sign-in__home-btn');
+const displayUsername = document.getElementById('username-box');
+signInBtn.addEventListener('click', () => {
     toggleSignInPopup()
 })
 
@@ -624,8 +619,6 @@ loginBtn.addEventListener('click', () => {
 
 
 function createUser() {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
     const username = document.getElementById('create-username');
     const email = document.getElementById('create-email');
     const password1 = document.getElementById('create-password1');
@@ -670,8 +663,6 @@ document.getElementById('register-form').addEventListener('submit', (e) => {
 
 
 function userLogin() {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
     const username = document.getElementById('login-username');
     const password = document.getElementById('login-password');
 
@@ -689,8 +680,12 @@ function userLogin() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            displayUsername.classList.toggle('hidden');
+            signInBtn.classList.toggle('hidden');
+            document.getElementById('show-username').textContent = username.value;
             username.value = '';
             password.value = '';
+            updateCSRFToken()
             console.log('Login successful');
         } else {
             console.error('Login failed:', data.error);
@@ -702,3 +697,43 @@ document.getElementById('login-form').addEventListener('submit', (e) => {
     e.preventDefault();
     userLogin();
 })
+
+
+function userLogout() {
+    fetch('/user_logout/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayUsername.classList.toggle('hidden');
+            signInBtn.classList.toggle('hidden');
+            console.log('logout successful');
+        } else {
+            console.error('Error logging out:', data.error);
+        }
+    })
+}
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+    userLogout();
+})
+
+
+    //update csrfToken
+function updateCSRFToken() {
+    fetch('/get_new_csrf_token/') 
+    .then(response => response.json())
+    .then(data => {
+        if (data.csrfToken) {
+            csrfToken = data.csrfToken;
+        }
+    })
+    .catch(error => {
+        console.error('Error updating CSRF token:', error);
+    });
+}

@@ -52,6 +52,7 @@ body {
     background-color: transparent;
     border: 1px solid #fff;
     border-radius: .5rem;
+    margin-left: auto;
     margin-right: 4rem;
     position: relative;
     cursor: pointer;
@@ -61,6 +62,35 @@ body {
 .sign-in__home-btn:hover {
     color: #87a5ff;
     background-color: #fff;
+}
+
+.sign-in__home-btn.hidden {
+    display: none;
+}
+
+#username-box {
+    display: inline-flex;
+    height: 3rem;
+    margin-left: auto;
+    margin-right: 4rem;
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: #fff;
+    position: relative; 
+}
+
+#username-box.hidden {
+    display: none;
+}
+
+#logout-btn {
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: .2s;
+}
+
+#logout-btn:hover {
+    scale: 1.2;
 }
 
 /* ___________________________________ SIDEBAR ___________________________________ */

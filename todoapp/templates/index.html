@@ -12,6 +12,11 @@
         <header class="header">
             <img src="../static/todoapp/images/logo.png" alt="logo" class="logo">
             <input type="button" class="sign-in__home-btn" id="sign-in__home-btn" value="SIGN IN">
+            <form id="username-box" class="hidden" method="post">
+                {% csrf_token %}
+                <span id="show-username"></span>
+                <img id="logout-btn" src="../static/todoapp/images/logout.png" alt="logout">
+            </form>
             <input type="checkbox" id="menu_checkbox">
             <div class="menu">
                 <span class="top_line common"></span>
