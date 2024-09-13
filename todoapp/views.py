@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 from . models import Task
-
+from django.contrib.auth import login
+from .forms import RegisterForm
 
 def index(request):
     return render(request, "index.html")
@@ -94,3 +95,18 @@ def delete_task(request, task_id):
         except Task.DoesNotExist:
             return JsonResponse({'error': 'Task not found!'}, status=404)
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+
+def register(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        form = RegisterForm(data)
+        print(data)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})
+        else:
+            print('form False')
+            return JsonResponse({'success': False, 'error': form.errors})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})

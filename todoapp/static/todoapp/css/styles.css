@@ -381,6 +381,7 @@ body {
 
 .create-new {
     position: relative;
+    visibility: hidden;
     width: 70rem;
     height: 35rem;
     margin: 1rem;
@@ -604,6 +605,7 @@ body {
 
 .details-popup__container {
     position: relative;
+    visibility: hidden;
     width: 60rem;
     padding: 2rem;
     margin: 2rem;
@@ -717,6 +719,7 @@ body {
 
 .delete-popup__container {
     position: relative;
+    visibility: hidden;
     height: 10rem;
     width: 20rem;
     display: flex;
@@ -818,6 +821,7 @@ body {
 
 .edit-popup__container {
     position: relative;
+    visibility: hidden;
     width: 50rem;
     height: 25rem;
     margin: 2rem;
@@ -896,6 +900,7 @@ body {
     height: 30rem;
     border-radius: .5rem;
     position: relative;
+    visibility: hidden;
     overflow: hidden;
     box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.6);
     transform: scale(0.01);

@@ -620,3 +620,45 @@ registerBtn.addEventListener('click', () => {
 loginBtn.addEventListener('click', () => {
     container.classList.remove("active");
 });
+
+
+
+function createUser() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const username = document.getElementById('create-username');
+    const email = document.getElementById('create-email');
+    const password1 = document.getElementById('create-password1');
+    const password2 = document.getElementById('create-password2');
+
+    const userData = {
+        username: username.value,
+        email: email.value,
+        password1: password1.value,
+        password2: password2.value,
+    }
+
+    console.log(userData)
+    fetch('/register/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Registration successful');
+        } else {
+            console.error('Registration failed:', data.errors);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+document.getElementById('register-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    createUser();
+})
