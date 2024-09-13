@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 from . models import Task
-from django.contrib.auth import login
+from django.contrib.auth import authenticate, login
 from .forms import RegisterForm
 
 def index(request):
@@ -109,4 +109,20 @@ def register(request):
         else:
             print('form False')
             return JsonResponse({'success': False, 'error': form.errors})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+def user_login(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        username = data.get('username')
+        password = data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid credentials'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})

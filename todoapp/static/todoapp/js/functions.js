@@ -650,6 +650,10 @@ function createUser() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            username.value = '';
+            email.value = '';
+            password1.value = '';
+            password2.value = '';
             console.log('Registration successful');
         } else {
             console.error('Registration failed:', data.errors);
@@ -661,4 +665,40 @@ function createUser() {
 document.getElementById('register-form').addEventListener('submit', (e) => {
     e.preventDefault();
     createUser();
+})
+
+
+
+function userLogin() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const username = document.getElementById('login-username');
+    const password = document.getElementById('login-password');
+
+    fetch('/user_login/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({
+            username: username.value,
+            password: password.value,
+        })
+    }) 
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            username.value = '';
+            password.value = '';
+            console.log('Login successful');
+        } else {
+            console.error('Login failed:', data.error);
+        }
+    })
+}
+
+document.getElementById('login-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    userLogin();
 })
