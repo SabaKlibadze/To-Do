@@ -1,16 +1,35 @@
 let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+const signInBtn = document.getElementById('sign-in__home-btn');
+const displayUsername = document.getElementById('username-box');
 
-document.addEventListener('DOMContentLoaded', function() {
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/check_user_status/')
+    .then(response => response.json())
+    .then(data => {
+        if (data.is_authenticated) {
+            getTasks(data.username);
+        } else {
+            homeCount();
+        }
+    })
+})
+
+
+function getTasks(username) {
     fetch('/get_tasks/')
         .then(response => response.json())
         .then(data => {
             data.forEach(task => {
                 addTaskToList(task);
             })
+        displayUsername.classList.toggle('hidden');
+        signInBtn.classList.toggle('hidden');
+        document.getElementById('show-username').textContent = username;
         homeCount()
         })    
-        .catch(error => console.error('Error:', error));
-});
+    .catch(error => console.error('Error:', error));
+};
 
 
 
@@ -586,8 +605,6 @@ document.getElementById('menu_checkbox').addEventListener('change', (e) => {
     }
 })
 
-const signInBtn = document.getElementById('sign-in__home-btn');
-const displayUsername = document.getElementById('username-box');
 signInBtn.addEventListener('click', () => {
     toggleSignInPopup()
 })
@@ -631,7 +648,6 @@ function createUser() {
         password2: password2.value,
     }
 
-    console.log(userData)
     fetch('/register/', {
         method: 'POST',
         headers: {
@@ -680,12 +696,11 @@ function userLogin() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            displayUsername.classList.toggle('hidden');
-            signInBtn.classList.toggle('hidden');
-            document.getElementById('show-username').textContent = username.value;
+            getTasks(username.value)
+            toggleSignInPopup();
+            updateCSRFToken()
             username.value = '';
             password.value = '';
-            updateCSRFToken()
             console.log('Login successful');
         } else {
             console.error('Login failed:', data.error);
@@ -710,6 +725,8 @@ function userLogout() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            clearTasks();
+            homeCount();
             displayUsername.classList.toggle('hidden');
             signInBtn.classList.toggle('hidden');
             console.log('logout successful');
@@ -722,6 +739,11 @@ function userLogout() {
 document.getElementById('logout-btn').addEventListener('click', () => {
     userLogout();
 })
+
+function clearTasks() {
+    const taskContainer = document.getElementById('task-container');
+    taskContainer.innerHTML = '';
+}
 
 
     //update csrfToken

@@ -19,7 +19,8 @@ def add_task(request):
             details = data['details'],    
             priority = data['priority'],        
             due_date = data['due_date'],
-            completed = False
+            completed = False,
+            user = request.user,
         )
         print(f"Task created: {task}")
         return JsonResponse({'success': True, 'task': {
@@ -34,9 +35,10 @@ def add_task(request):
 
 
 def get_tasks(request):
-    tasks = Task.objects.all().values('id', 'title', 'due_date', 'priority', 'completed')
+    tasks = Task.objects.filter(user=request.user).values(
+        'id', 'title', 'due_date', 'priority', 'completed')
     return JsonResponse(list(tasks), safe=False)
-
+    
 
 def get_task_details(request, task_id):
     try:
@@ -141,3 +143,17 @@ def user_logout(request):
 def get_new_csrf_token(request):
     csrf_token = get_token(request)
     return JsonResponse({'csrfToken': csrf_token})
+
+
+
+def check_user_status(request):
+    if request.user.is_authenticated:
+        return JsonResponse({
+            'is_authenticated': True,
+            'username': request.user.username,
+        })
+    else:
+        return JsonResponse({
+            'is_authenticated': False,
+            'username': None,
+        })
