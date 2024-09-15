@@ -252,6 +252,12 @@ function showTaskDetails(taskId) {
         detailsModel.querySelector('.details-popup__priority-value').textContent = data.priority;
         detailsModel.querySelector('.details-popup__priority-value').classList.add(`DPPV-${data.priority}`);
         detailsModel.querySelector('.details-popup__duedate-value').textContent = formatDate(data.due_date);
+        const completedMark = document.getElementById('completed-mark');
+        if (data.completed) {
+            completedMark.classList.add('completed');
+        } else {
+            completedMark.classList.remove('completed');
+        }
     })
     .catch((error) => {
         console.error('Error:', error)

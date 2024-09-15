@@ -48,6 +48,7 @@ def get_task_details(request, task_id):
             'details': task.details,
             'priority': task.priority,
             'due_date': task.due_date,
+            'completed': task.completed
         }
         return JsonResponse(task_data)
     except Task.DoesNotExist:

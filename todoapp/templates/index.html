@@ -8,182 +8,197 @@
     <link rel="icon" href="../static/todoapp/images/favicon.png">
 </head>
 <body>
-    <div class="content">
-        <header class="header">
-            <img src="../static/todoapp/images/logo.png" alt="logo" class="logo">
-            <input type="button" class="sign-in__home-btn" id="sign-in__home-btn" value="SIGN IN">
-            <form id="username-box" class="hidden" method="post">
-                {% csrf_token %}
-                <span id="show-username"></span>
-                <img id="logout-btn" src="../static/todoapp/images/logout.png" alt="logout">
-            </form>
-            <input type="checkbox" id="menu_checkbox">
-            <div class="menu">
-                <span class="top_line common"></span>
-                <span class="middle_line common"></span>
-                <span class="bottom_line common"></span>
+    <div id="particles-js">
+        <div class="content">
+            <header class="header">
+                <img src="../static/todoapp/images/logo.png" alt="logo" class="logo">
+                <input type="button" class="sign-in__home-btn" id="sign-in__home-btn" value="SIGN IN">
+                <form id="username-box" class="hidden" method="post">
+                    {% csrf_token %}
+                    <div id="display-username">
+                        <span id="show-username-status"></span>
+                        <span id="show-username"></span>
+                    </div>
+                    <img id="logout-btn" src="../static/todoapp/images/logout.png" alt="logout">
+                </form>
+                <input type="checkbox" id="menu_checkbox">
+                <div class="menu">
+                    <span class="top_line common"></span>
+                    <span class="middle_line common"></span>
+                    <span class="bottom_line common"></span>
+                </div>
+            </header>
+            <nav class="side_bar" id="side_bar">
+                <ul id="navig">
+                    <li id="home"> 
+                        <h2 class="home-today-week project-home selected" id="project-home">
+                            <span class="project-flex-1 ">H</span>
+                            <span class="project-flex-2 ">ome</span>
+                        </h2>
+                        <span class="home-count" id="home-count"></span>
+                    </li>
+                    <li id="today">
+                        <h2 class="home-today-week project-today" id="project-today">
+                            <span class="project-flex-1">T</span>
+                            <span class="project-flex-2">oday</span>
+                        </h2>
+                        <span class="today-count" id="today-count"></span>
+                    </li>
+                    <li id="week">
+                        <h2 class="home-today-week project-week" id="project-week">
+                            <span class="project-flex-1">W</span>
+                            <span class="project-flex-2">eek</span>
+                        </h2>
+                        <span class="week-count" id="week-count"></span>
+                    </li>
+                    <div id="new-projects">
+                        <img id="construction" src="../static/todoapp/images/construction.png" alt="under construction">
+                        <span class="project-task project-task-header" >Projects</span>
+                        <span class="project-task">Gym</span>
+                        <span class="project-task">Study</span>
+                        <span class="project-task">Work</span>
+                        <span class="project-task project-task-header">Notes</span>
+                    </div>
+                </ul>
+                <div id="create-new-task-btn" class="create-new-task-btn">+</div>
+            </nav>
+            <div class="main_container">
+                <form class="task-container" id="task-container" method="post">
+                    {% csrf_token %}
+                </form>
             </div>
-        </header>
-        <nav class="side_bar" id="side_bar">
-            <ul id="navig">
-                <li id="home"> 
-                    <h2 class="home-today-week project-home selected" id="project-home">
-                        <span class="project-flex-1 ">H</span>
-                        <span class="project-flex-2 ">ome</span>
-                    </h2>
-                    <span class="home-count" id="home-count"></span>
-                </li>
-                <li id="today">
-                    <h2 class="home-today-week project-today" id="project-today">
-                        <span class="project-flex-1">T</span>
-                        <span class="project-flex-2">oday</span>
-                    </h2>
-                    <span class="today-count" id="today-count"></span>
-                </li>
-                <li id="week">
-                    <h2 class="home-today-week project-week" id="project-week">
-                        <span class="project-flex-1">W</span>
-                        <span class="project-flex-2">eek</span>
-                    </h2>
-                    <span class="week-count" id="week-count"></span>
-                </li>
-            </ul>
-            <div id="create-new-task-btn" class="create-new-task-btn">+</div>
-        </nav>
-        <div class="main_container">
-            <form class="task-container" id="task-container" method="post">
+        </div>
+        <div class="overlay hidden" id="overlay">
+            <form class="create-new" id="create-new" method="post">
                 {% csrf_token %}
+                <div  class="create-new__close-btn">&times;</div>
+                <div class="create-new__content-box"> 
+                    <div class="create-new__sidebar">
+                        <h2> // To-Do</h2>
+                    </div>
+                    <div class="create-new__imput">
+                        <textarea name="new-task" id="create-new__name" maxlength="30" placeholder="Title:" required></textarea>
+                        <textarea name="new-task-details" id="create-new__details" placeholder="Details:"></textarea>
+                        <div class="create-new-date">
+                            <div class="create-new-date__title">Due Date:</div>
+                            <input type="date" class="create-new-date__duedate" id="create-new-date__duedate" name="create-new-date__duedate" required>
+                        </div>
+                        <div class="crate-new__atributes">
+                            <div class="create-new-priority-and-submit">
+                                <div class="create-new-priority">
+                                    <div class="create_priority_title"> Priority: </div>
+                                    <input type="radio" name="create-priority" id="create-priority-low" value="low" required>
+                                    <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
+                                    <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
+                                    <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
+                                    <input type="radio" name="create-priority" id="create-priority-high" value="high" required>
+                                    <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
+                                </div>
+                                <input type="submit" id="new-task-submit" value="Add task">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
-    </div>
-    <div class="overlay hidden" id="overlay">
-        <form class="create-new" id="create-new" method="post">
-            {% csrf_token %}
-            <div  class="create-new__close-btn">&times;</div>
-            <div class="create-new__content-box"> 
-                <div class="create-new__sidebar">
-                    <h2> // To-Do</h2>
-                </div>
-                <div class="create-new__imput">
-                    <textarea name="new-task" id="create-new__name" maxlength="30" placeholder="Title:" required></textarea>
-                    <textarea name="new-task-details" id="create-new__details" placeholder="Details:"></textarea>
-                    <div class="create-new-date">
-                        <div class="create-new-date__title">Due Date:</div>
-                        <input type="date" class="create-new-date__duedate" id="create-new-date__duedate" name="create-new-date__duedate" required>
+        <div class="details-popup__overlay hidden" id="details-popup__overlay">
+            <div class="details-popup__container" id="details-popup__container">
+                <div id="details-popup__close-btn">&times;</div>
+                <img id="completed-mark" src="../static/todoapp/images/Completed.png" alt="completed mark">
+                <div class="details-popup__content" id="details-popup__content">
+                    <div class="details-popup__title"></div>
+                    <div class="details-popup__details"></div>
+                    <div class="details-popup__atributes">
+                        <span class="details-popup__priority">Priority:</span>
+                        <span class="details-popup__priority-value"></span>
+                        <span class="details-popup__duedate">Due Date:</span>
+                        <span class="details-popup__duedate-value"></span>
                     </div>
-                    <div class="crate-new__atributes">
-                        <div class="create-new-priority-and-submit">
+                </div>
+            </div>
+        </div>
+        <div id="edit-popup__overlay" class="edit-popup__overlay hidden">
+            <div id="edit-popup__container" class="edit-popup__container">
+                <div id="edit-popup__close-btn">&times;</div>
+                <form id="edit-popup__content" method="post">
+                    {% csrf_token %}
+                    <textarea  id="edit-popup__name" maxlength="30" placeholder="Title:" required></textarea>
+                    <textarea  id="edit-popup__details" placeholder="Details:"></textarea>
+                    <div class="create-new-date">
+                        <div class="edit-popup__date-title">Due Date:</div>
+                        <input type="date" class="edit-popup__date-duedate" id="edit-popup__date-duedate" name="create-new-date__duedate" required>
+                    </div>
+                    <div class="edit-popup__atributes">
+                        <div class="edit-popup__priority-and-submit">
                             <div class="create-new-priority">
                                 <div class="create_priority_title"> Priority: </div>
-                                <input type="radio" name="create-priority" id="create-priority-low" value="low" required>
-                                <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
-                                <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
-                                <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
-                                <input type="radio" name="create-priority" id="create-priority-high" value="high" required>
-                                <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
+                                <input type="radio" name="create-priority" id="edit-priority-low" value="low" required>
+                                <label for="edit-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
+                                <input type="radio" name="create-priority" id="edit-priority-medium" value="medium" required>
+                                <label for="edit-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
+                                <input type="radio" name="create-priority" id="edit-priority-high" value="high" required>
+                                <label for="edit-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
                             </div>
-                            <input type="submit" id="new-task-submit" value="Add task">
+                            <input type="submit" id="edit-popup__submit" class="edit-popup__submit" value="CONFIRM EDIT">
                         </div>
                     </div>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="details-popup__overlay hidden" id="details-popup__overlay">
-        <div class="details-popup__container">
-            <div id="details-popup__close-btn">&times;</div>
-            <div class="details-popup__content" id="details-popup__content">
-                <div class="details-popup__title"></div>
-                <div class="details-popup__details">
-                </div>
-                <div class="details-popup__atributes">
-                    <span class="details-popup__priority">Priority:</span>
-                    <span class="details-popup__priority-value"></span>
-                    <span class="details-popup__duedate">Due Date:</span>
-                    <span class="details-popup__duedate-value"></span>
-                </div>
+
+                </form>
             </div>
         </div>
-    </div>
-    <div id="edit-popup__overlay" class="edit-popup__overlay hidden">
-        <div id="edit-popup__container" class="edit-popup__container">
-            <div id="edit-popup__close-btn">&times;</div>
-            <form id="edit-popup__content" method="post">
+        <div class="delete-popup__overlay hidden" id="delete-popup__overlay">
+            <form class="delete-popup__container" id="delete-popup__container" method="post">
                 {% csrf_token %}
-                <textarea  id="edit-popup__name" maxlength="30" placeholder="Title:" required></textarea>
-                <textarea  id="edit-popup__details" placeholder="Details:"></textarea>
-                <div class="create-new-date">
-                    <div class="edit-popup__date-title">Due Date:</div>
-                    <input type="date" class="edit-popup__date-duedate" id="edit-popup__date-duedate" name="create-new-date__duedate" required>
+                <span class="delete-popup__ask">Delete:</span>
+                <div class="delete-popup__title-box">
+                    <span class="delete-popup__task-title"></span>
                 </div>
-                <div class="edit-popup__atributes">
-                    <div class="edit-popup__priority-and-submit">
-                        <div class="create-new-priority">
-                            <div class="create_priority_title"> Priority: </div>
-                            <input type="radio" name="create-priority" id="edit-priority-low" value="low" required>
-                            <label for="edit-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
-                            <input type="radio" name="create-priority" id="edit-priority-medium" value="medium" required>
-                            <label for="edit-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
-                            <input type="radio" name="create-priority" id="edit-priority-high" value="high" required>
-                            <label for="edit-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
-                        </div>
-                        <input type="submit" id="edit-popup__submit" class="edit-popup__submit" value="CONFIRM EDIT">
-                    </div>
+                <div class="delete-popup__btns">
+                    <button class="delete-popup__cancel" id="delete-popup__cancel">Cancel</button>
+                    <button class="delete-popup__yes">Delete</button>
                 </div>
-
             </form>
         </div>
-    </div>
-    <div class="delete-popup__overlay hidden" id="delete-popup__overlay">
-        <form class="delete-popup__container" id="delete-popup__container" method="post">
-            {% csrf_token %}
-            <span class="delete-popup__ask">Delete:</span>
-            <div class="delete-popup__title-box">
-                <span class="delete-popup__task-title"></span>
-            </div>
-            <div class="delete-popup__btns">
-                <button class="delete-popup__cancel" id="delete-popup__cancel">Cancel</button>
-                <button class="delete-popup__yes">Delete</button>
-            </div>
-        </form>
-    </div>
-    <div class="create-user__overlay hidden" id="create-user__overlay">
-        <div class="create-user__container" id="create-user__container">
-            <div class="form-container sign-up">
-                <form id="register-form" method="post">
-                    {% csrf_token %}
-                    <h1>Create Account</h1>
-                    <input type="text" id="create-username" maxlength="30" placeholder="Username" required>
-                    <input type="email" id="create-email" placeholder="Email" required>
-                    <input type="password" id="create-password1" placeholder="Password" required>
-                    <input type="password" id="create-password2" placeholder="Confirm password" required>
-                    <button type="submit" id="register-user-btn">Sign Up</button>
-                </form>
-            </div>
-            <div class="form-container sign-in">
-                <form id="login-form" method="post">
-                    {% csrf_token %}
-                    <h1>Sign In</h1>
-                    <input type="text" id="login-username" placeholder="Username" required>
-                    <input type="password" id="login-password" placeholder="Password" required>
-                    <button type="submit" id="login-user-btn">Sign In</button>
-                </form>
-            </div>
-            <div class="toggle-container">
-                <div class="toggle">
-                    <div class="toggle-panel toggle-left">
-                        <h2>Welcome Back!</h2>
-                        <button class="hidden" id="login">Sign In</button>
-                    </div>
-                    <div class="toggle-panel toggle-right">
-                        <h2>Hello, Friend!</h2>
-                        <p>Register to use all features</p>
-                        <button class="hidden" id="register">Sign Up</button>
+        <div class="create-user__overlay hidden" id="create-user__overlay">
+            <div class="create-user__container" id="create-user__container">
+                <div class="form-container sign-up">
+                    <form id="register-form" method="post">
+                        {% csrf_token %}
+                        <h1>Create Account</h1>
+                        <input type="text" id="create-username" maxlength="30" placeholder="Username" required>
+                        <input type="email" id="create-email" placeholder="Email" required>
+                        <input type="password" id="create-password1" placeholder="Password" required>
+                        <input type="password" id="create-password2" placeholder="Confirm password" required>
+                        <button type="submit" id="register-user-btn">Sign Up</button>
+                    </form>
+                </div>
+                <div class="form-container sign-in">
+                    <form id="login-form" method="post">
+                        {% csrf_token %}
+                        <h1>Sign In</h1>
+                        <input type="text" id="login-username" placeholder="Username" required>
+                        <input type="password" id="login-password" placeholder="Password" required>
+                        <button type="submit" id="login-user-btn">Sign In</button>
+                    </form>
+                </div>
+                <div class="toggle-container">
+                    <div class="toggle">
+                        <div class="toggle-panel toggle-left">
+                            <h2>Welcome Back!</h2>
+                            <button class="hidden" id="login">Sign In</button>
+                        </div>
+                        <div class="toggle-panel toggle-right">
+                            <h2>Hello, Friend!</h2>
+                            <p>Register to use all features</p>
+                            <button class="hidden" id="register">Sign Up</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<script src="../static/todoapp/js/particles.js"></script>
+<script src="../static/todoapp/js/app.js"></script>
 <script src="../static/todoapp/js/functions.js"></script>
 </body>
 </html>
