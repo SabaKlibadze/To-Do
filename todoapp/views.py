@@ -5,6 +5,10 @@ from . models import Task
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm
 from django.middleware.csrf import get_token
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
 
 def index(request):
     return render(request, "index.html")
@@ -35,10 +39,16 @@ def add_task(request):
 
 
 def get_tasks(request):
-    tasks = Task.objects.filter(user=request.user).values(
-        'id', 'title', 'due_date', 'priority', 'completed')
-    return JsonResponse(list(tasks), safe=False)
-    
+    if request.user.is_authenticated:
+        tasks = Task.objects.filter(user=request.user).values(
+            'id', 'title', 'due_date', 'priority', 'completed', 'user')
+        return JsonResponse(list(tasks), safe=False)
+    else:
+        default_user = User.objects.get(username="Default")
+        tasks = Task.objects.filter(user=default_user).values(
+            'id', 'title', 'due_date', 'priority', 'completed', 'user')
+        return JsonResponse(list(tasks), safe=False)
+
 
 def get_task_details(request, task_id):
     try:
@@ -158,3 +168,29 @@ def check_user_status(request):
             'is_authenticated': False,
             'username': None,
         })
+    
+
+
+def validate_user(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+
+        user_exist = User.objects.filter(email=email).exists()
+        
+        if user_exist:
+            return JsonResponse({'success': False, 'error': 'Email already exists.'})
+        else:
+            try:
+                temp_user = User(username=username, email=email)
+
+                validate_password(password, user=temp_user)
+
+            except ValidationError as e:
+                return JsonResponse({'success': False, 'error': e.messages})
+            
+            return JsonResponse({'success': True})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})

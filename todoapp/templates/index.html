@@ -165,10 +165,22 @@
                     <form id="register-form" method="post">
                         {% csrf_token %}
                         <h1>Create Account</h1>
-                        <input type="text" id="create-username" maxlength="30" placeholder="Username" required>
-                        <input type="email" id="create-email" placeholder="Email" required>
-                        <input type="password" id="create-password1" placeholder="Password" required>
-                        <input type="password" id="create-password2" placeholder="Confirm password" required>
+                        <div class="input-control">
+                            <input type="text" id="create-username" maxlength="30" placeholder="Username">
+                            <div class="error"></div>
+                        </div>
+                        <div class="input-control">
+                            <input type="text" id="create-email" placeholder="email">
+                            <div class="error"></div>
+                        </div>
+                        <div class="input-control">
+                            <input type="password" id="create-password1" placeholder="Password">
+                            <div class="error"></div>
+                        </div>
+                       <div class="input-control">
+                            <input type="password" id="create-password2" placeholder="Confirm password">
+                            <div class="error"></div>
+                       </div>
                         <button type="submit" id="register-user-btn">Sign Up</button>
                     </form>
                 </div>
@@ -199,6 +211,6 @@
     </div>
 <script src="../static/todoapp/js/particles.js"></script>
 <script src="../static/todoapp/js/app.js"></script>
-<script src="../static/todoapp/js/functions.js"></script>
+<script type="module" src="../static/todoapp/js/index.js"></script>
 </body>
 </html>
