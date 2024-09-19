@@ -109,6 +109,8 @@ function userLogin(email, pass) {
 
     let emailElement = document.getElementById('login-email');
     let passwordElement = document.getElementById('login-password');
+    let errorElement = document.getElementById('sign-in-error');
+    errorElement.textContent = '';
 
     if (email !== undefined && pass !== undefined) {
         emailElement.value = email;
@@ -137,6 +139,7 @@ function userLogin(email, pass) {
             passwordElement.value = '';
             console.log('Login successful');
         } else {
+            errorElement.textContent = 'Wrong email or password';
             console.error('Login failed:', data.error);
         }
     })

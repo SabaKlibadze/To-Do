@@ -1099,11 +1099,11 @@ input[type='date']::-webkit-calendar-picker-indicator {
 }
 
 .input-control.error input {
-    border-color: #be2121;
+    border-color: #ff0000;
 }
 
 .input-control .error {
-    color: #be2121;
+    color: #ff0000;
     font-size: 10px;
     height: 15px;
     margin: 0 0 .5rem 1rem;
@@ -1130,6 +1130,15 @@ input[type='date']::-webkit-calendar-picker-indicator {
 
 .sign-in input {
     margin: 1rem 0;
+}
+
+#sign-in-error {
+    display: flex;
+    justify-content: center;
+    color: #ff0000;
+    font-size: 12px;
+    height: 15px;
+    width: 100%;
 }
 
 .create-user__container.active .sign-in {
