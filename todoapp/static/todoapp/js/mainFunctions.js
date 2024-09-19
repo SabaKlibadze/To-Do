@@ -184,7 +184,7 @@ export const domManager = (function () {
 export const taskManager = (function () {
 
     function getTasks(username) {
-        console.log(username);
+        // console.log(username);
         fetch('/get_tasks/')
             .then(response => response.json())
             .then(data => {
@@ -314,7 +314,7 @@ export const taskManager = (function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                addTaskToList(data.task);
+                addTaskToList(data.task, data.user);
                 newTaskName.value = '';
                 newTaskDetails.value = '';
                 dueDate.value = '';

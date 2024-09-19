@@ -92,7 +92,7 @@ function createUser(username, email, password1, password2) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            userLogin(username, password1)
+            userLogin(email, password1)
             domManager.clearTasks();
             console.log('Registration successful');
         } else {
@@ -104,14 +104,14 @@ function createUser(username, email, password1, password2) {
 
 
 
-function userLogin(user, pass) {
+function userLogin(email, pass) {
     const csrfToken = domManager.getCSRFToken();
 
-    let userElement = document.getElementById('login-username');
+    let emailElement = document.getElementById('login-email');
     let passwordElement = document.getElementById('login-password');
 
-    if (user !== undefined && pass !== undefined) {
-        userElement.value = user;
+    if (email !== undefined && pass !== undefined) {
+        emailElement.value = email;
         passwordElement.value = pass;
     }
     fetch('/user_login/', {
@@ -121,7 +121,7 @@ function userLogin(user, pass) {
             'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({
-            username: userElement.value,
+            email: emailElement.value,
             password: passwordElement.value,
         })
     }) 
@@ -132,8 +132,8 @@ function userLogin(user, pass) {
             domManager.clearTasks();
             domManager.updateCSRFToken();
             domManager.toggleSignInPopup();
-            taskManager.getTasks(userElement.value);
-            userElement.value = '';
+            taskManager.getTasks(data.username);
+            emailElement.value = '';
             passwordElement.value = '';
             console.log('Login successful');
         } else {
@@ -212,45 +212,49 @@ function validateInputs() {
 
     let successInputs = 0;
 
-    if (usernameValue.length < 3) {
-        setError(username, 'Username must be at least 3 character.');
-    } else {
-        setSuccess(username);
-        successInputs += 1;
-    }
-
-    if (emailValue === '') {
-        setError(email, 'Email is required.');
-    } else if (!isValidEmail(emailValue)) {
-        setError(email, 'Provide a valid email address.');
-    } else {
-        fetch('/validate_user/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': domManager.getCSRFToken()
-            },
-            body: JSON.stringify({
-                username: usernameValue,
-                email: emailValue,
-                password: password1Value,
-            })
+    fetch('/validate_user/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': domManager.getCSRFToken()
+        },
+        body: JSON.stringify({
+            username: usernameValue,
+            email: emailValue,
+            password: password1Value,
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                if (data.error == 'Email already exists.') {
-                    setError(email, ("Error: ", data.error));
-                } else {
-                    setError(password1, ("Error: ", data.error));
-                }
-            } else {
-                setSuccess(email);
-                setSuccess(password1);
-                successInputs += 2;
-            }
-        }) 
-    }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (usernameValue.length < 3) {
+            setError(username, 'Username must be at least 3 character.');
+        } else if (data.username == true) {
+            setError(username, 'Username already exists.');
+        } else {
+            setSuccess(username);
+            successInputs += 1;
+        }
+
+        if (emailValue === '') {
+            setError(email, 'Email is required.');
+        } else if (!isValidEmail(emailValue)) {
+            setError(email, 'Provide a valid email address.');
+        } else if (data.email == true) {
+            setError(email, 'Email already exists.');
+        } else {
+            setSuccess(email);
+            successInputs += 1;
+        }
+
+        if (password1Value.length < 8) {
+            setError(password1, 'Password must be at least 8 character.');
+        } else if (data.password == true) {
+            setError(password1, ("Error: ", data.error[0]));
+        } else {
+            setSuccess(password1);
+            successInputs += 1;
+        }
+    }) 
 
     if (password2Value === '') {
         setError(password2, 'Please confirm your password.');
@@ -275,6 +279,9 @@ function validateInputs() {
         }
     })
 }
+
+
+
 
 
 

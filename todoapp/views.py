@@ -17,7 +17,7 @@ def index(request):
 def add_task(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print(f"Received data: {data}")
+        # print(f"Received data: {data}")
         task = Task.objects.create(
             title = data['title'],
             details = data['details'],    
@@ -26,8 +26,8 @@ def add_task(request):
             completed = False,
             user = request.user,
         )
-        print(f"Task created: {task}")
-        return JsonResponse({'success': True, 'task': {
+        # print(f"Task created: {task}")
+        return JsonResponse({'success': True, 'user': request.user.username, 'task': {
             'id': task.id, 
             'title': task.title, 
             'due_date': task.due_date, 
@@ -87,7 +87,7 @@ def update_task(request, task_id):
         try:
             task = Task.objects.get(id=task_id)
             data = json.loads(request.body)
-            print(f"Received data: {data}")
+            # print(f"Received data: {data}")
             task.title = data['title']
             task.details = data['details']
             task.due_date = data['due_date']
@@ -116,12 +116,12 @@ def register(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         form = RegisterForm(data)
-        print(data)
+        # print(data)
         if form.is_valid():
             form.save()
             return JsonResponse({'success': True})
         else:
-            print('form False')
+            # print(form.errors)
             return JsonResponse({'success': False, 'error': form.errors})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
@@ -130,16 +130,25 @@ def register(request):
 def user_login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        print(data)
-        username = data.get('username')
+        # print(data)
+        email = data.get('email')
         password = data.get('password')
-        user = authenticate(request, username=username, password=password)
+        user = authenticate_by_email(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'username': request.user.username})
         else:
             return JsonResponse({'success': False, 'error': 'Invalid credentials'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+def authenticate_by_email(request, email, password):
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return None
+    return authenticate(request, username=user.username, password=password)
 
 
 
@@ -178,19 +187,22 @@ def validate_user(request):
         email = data.get('email')
         password = data.get('password')
 
-        user_exist = User.objects.filter(email=email).exists()
+        username_exist = User.objects.filter(username=username).exists()
+        email_exist = User.objects.filter(email=email).exists()
+
+        try:
+            temp_user = User(username=username, email=email)
+
+            validate_password(password, user=temp_user)
+
+        except ValidationError as e:
+            return JsonResponse({'username': username_exist,
+                                 'email': email_exist,
+                                 'password': True,
+                                 'error': e.messages})
         
-        if user_exist:
-            return JsonResponse({'success': False, 'error': 'Email already exists.'})
-        else:
-            try:
-                temp_user = User(username=username, email=email)
-
-                validate_password(password, user=temp_user)
-
-            except ValidationError as e:
-                return JsonResponse({'success': False, 'error': e.messages})
-            
-            return JsonResponse({'success': True})
+        return JsonResponse({'username': username_exist,
+                             'email': email_exist,
+                             'password': False})
     
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
