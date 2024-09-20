@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Task(models.Model):
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=40)
     due_date = models.DateField(default=date.today)
     priority = models.CharField(max_length=10, default='Low')
     details = models.TextField(blank=True, null=True)

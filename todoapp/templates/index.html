@@ -74,10 +74,20 @@
                 <div  class="create-new__close-btn">&times;</div>
                 <div class="create-new__content-box"> 
                     <div class="create-new__sidebar">
-                        <h2> // To-Do</h2>
+                        <h2 id="add-todo">
+                            <img class="selected-icon" src="../static/todoapp/images/slash.png" alt="todo icon">
+                            <span>ToDo</span>
+                        </h2>
+                        <div id="add-todo__projects">
+                            <img id="add-todo__construction" src="../static/todoapp/images/construction.png" alt="under construction">
+                            <span class="project-task">Gym</span>
+                            <span class="project-task">Study</span>
+                            <span class="project-task">Work</span>
+                            <span class="project-task project-task-header">Notes</span>
+                        </div>
                     </div>
                     <div class="create-new__imput">
-                        <textarea name="new-task" id="create-new__name" maxlength="30" placeholder="Title:" required></textarea>
+                        <textarea name="new-task" id="create-new__name" maxlength="40" placeholder="Title:" required></textarea>
                         <textarea name="new-task-details" id="create-new__details" placeholder="Details:"></textarea>
                         <div class="create-new-date">
                             <div class="create-new-date__title">Due Date:</div>
@@ -189,7 +199,10 @@
                         {% csrf_token %}
                         <h1>Sign In</h1>
                         <input type="text" id="login-email" placeholder="Email" required>
-                        <input type="password" id="login-password" placeholder="Password" required>
+                        <div id="password-box">
+                            <input type="password" id="login-password" placeholder="Password" required>
+                            <img src="../static/todoapp/images/eye-slash.png" id="password-eye" alt="hide password">
+                        </div>
                         <div id="sign-in-error"></div>
                         <button type="submit" id="login-user-btn">Sign In</button>
                     </form>

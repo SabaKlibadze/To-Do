@@ -51,6 +51,8 @@ const loginForm = document.getElementById('login-form');
 
 const logoutBtn = document.getElementById('logout-btn');
 
+const eyeicon = document.getElementById('password-eye');
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -123,7 +125,7 @@ function userLogin(email, pass) {
             'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({
-            email: emailElement.value,
+            email: emailElement.value.toLowerCase(),
             password: passwordElement.value,
         })
     }) 
@@ -209,7 +211,7 @@ function validateInputs() {
     const password2 = document.getElementById('create-password2');
 
     const usernameValue = username.value.trim();
-    const emailValue = email.value.trim();
+    const emailValue = email.value.toLowerCase().trim();
     const password1Value = password1.value.trim();
     const password2Value = password2.value.trim();
 
@@ -284,7 +286,17 @@ function validateInputs() {
 }
 
 
+function showPassword() {
+    let password = document.getElementById('login-password');
 
+    if(password.type == 'password') {
+        password.type = 'text';
+        eyeicon.src = '../static/todoapp/images/eye.png';
+    } else {
+        password.type = 'password';
+        eyeicon.src = '../static/todoapp/images/eye-slash.png';
+    }
+}
 
 
 
@@ -408,6 +420,10 @@ registerBtn.addEventListener('click', () => {
 loginBtn.addEventListener('click', () => {
     container.classList.remove("active");
 });
+
+eyeicon.addEventListener('click', () => {
+    showPassword();
+})
 
 registerForm.addEventListener('submit', (e) => {
     e.preventDefault();
