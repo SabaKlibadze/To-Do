@@ -15,4 +15,5 @@ urlpatterns = [
     path('get_new_csrf_token/', views.get_new_csrf_token, name='get_new_csrf_token'),
     path('check_user_status/', views.check_user_status, name='check_user_status'),
     path('validate_user/', views.validate_user, name='validate_user'),
+    path('rename_category/', views.rename_category, name='rename_category'),
 ]

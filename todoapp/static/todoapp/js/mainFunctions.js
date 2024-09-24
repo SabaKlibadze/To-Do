@@ -47,6 +47,25 @@ export const domManager = (function () {
         })
         todayCount.textContent = today;
         weekCount.textContent = today + week;
+
+        const categoryN1Count = document.getElementById('project-n1-count');
+        const categoryN2Count = document.getElementById('project-n2-count');
+        const categoryN3Count = document.getElementById('project-n3-count');
+        let n1Count = 0;
+        let n2Count = 0;
+        let n3Count = 0;
+        tasks.forEach(task => {
+            if (task.classList.contains('project-n1')) {
+                n1Count += 1;
+            } else if (task.classList.contains('project-n2')) {
+                n2Count += 1;
+            } else if (task.classList.contains('project-n3')) {
+                n3Count += 1;
+            }
+        })
+        categoryN1Count.textContent = n1Count;
+        categoryN2Count.textContent = n2Count;
+        categoryN3Count.textContent = n3Count;
     }
 
 
@@ -111,6 +130,53 @@ export const domManager = (function () {
     }
 
 
+    function getProjectNames(projectN1, projectN2, projectN3) {
+        document.getElementById('project-n1').textContent = projectN1;
+        document.getElementById('add-project-n1').textContent = projectN1;
+        document.getElementById('project-n2').textContent = projectN2;
+        document.getElementById('add-project-n2').textContent = projectN2;
+        document.getElementById('project-n3').textContent = projectN3;
+        document.getElementById('add-project-n3').textContent = projectN3;
+    }
+
+
+    function showProjectN1() {
+        const tasks = document.querySelectorAll('.task');
+
+        tasks.forEach(task => {
+            if (task.classList.contains('project-n1')) {
+                task.style.display = 'flex';
+            } else {
+                task.style.display = 'none';
+            }
+        })
+    }
+
+    function showProjectN2() {
+        const tasks = document.querySelectorAll('.task');
+
+        tasks.forEach(task => {
+            if (task.classList.contains('project-n2')) {
+                task.style.display = 'flex';
+            } else {
+                task.style.display = 'none';
+            }
+        })
+    }
+
+    function showProjectN3() {
+        const tasks = document.querySelectorAll('.task');
+
+        tasks.forEach(task => {
+            if (task.classList.contains('project-n3')) {
+                task.style.display = 'flex';
+            } else {
+                task.style.display = 'none';
+            }
+        })
+    }
+
+
     function clearTasks() {
         const taskContainer = document.getElementById('task-container');
         taskContainer.innerHTML = '';
@@ -153,6 +219,11 @@ export const domManager = (function () {
         document.getElementById("delete-popup__overlay").classList.toggle("hidden");
     }
 
+    function toggleRenamePopup() {
+        document.getElementById('rename-popup__container').classList.toggle('active');
+        document.getElementById('rename-popup__overlay').classList.toggle('hidden');
+    }
+
 
     function toggleSignInPopup() {
         document.getElementById('create-user__container').classList.toggle('open');
@@ -168,12 +239,17 @@ export const domManager = (function () {
         showTodayTasks,
         WeekTasksClass,
         showWeekTasks,
+        getProjectNames,
+        showProjectN1,
+        showProjectN2,
+        showProjectN3,
         clearTasks,
         formatDate,
         toggleNewTaskPopup,
         toggleTaskDetailsPopup,
         toggleTaskEditPopup,
         toggleDeletePopup,
+        toggleRenamePopup,
         toggleSignInPopup,
     }
 
@@ -265,13 +341,17 @@ export const taskManager = (function () {
             e.preventDefault(); 
             deleteConfirmation(`${task.id}`, user);
         })
+        console.log(task.project)
+        if (task.project != null) {
+            taskElement.classList.add(`${task.project}`);
+        }
 
-        if (`${task.completed}` === 'true') {
-            taskElement.classList.add('task-checked');
-            taskCheckbox.classList.add('task-checkbox-checked');
-            taskName.classList.add('task-name-checked');
-            taskDetailsBtn.classList.add('task-details-checked');
-            taskDate.classList.add('task-date-checked');
+        if (task.completed) {
+        taskElement.classList.add('task-checked');
+        taskCheckbox.classList.add('task-checkbox-checked');
+        taskName.classList.add('task-name-checked');
+        taskDetailsBtn.classList.add('task-details-checked');
+        taskDate.classList.add('task-date-checked');
         }
 
         taskElement.appendChild(priorityFlag)
@@ -294,12 +374,20 @@ export const taskManager = (function () {
         const newTaskDetails = document.getElementById('create-new__details');
         const priorityFlag = document.querySelector('input[name="create-priority"]:checked').value;
         const dueDate = document.getElementById('create-new-date__duedate');
+        const projects = document.querySelectorAll('.add-project');
+        let projectTemplate = '';
+        projects.forEach(e => {
+            if (e.classList.contains('selected')) {
+                projectTemplate = e.classList[1];
+            } 
+        });
         
         const taskData = {
             title: newTaskName.value,
             details: newTaskDetails.value,
             priority: priorityFlag,
             due_date: dueDate.value,
+            project_template: projectTemplate,
             completed: false,
         };
 
@@ -325,7 +413,7 @@ export const taskManager = (function () {
         .catch(error => {
             console.error('Error:', error);
         });
-    }   
+    } 
 
 
 

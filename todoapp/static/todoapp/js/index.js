@@ -25,7 +25,7 @@ const deletePopupOverlay = document.getElementById('delete-popup__overlay');
 
 const deleteCancel = document.getElementById('delete-popup__cancel');
 
-const homeTodayWeek = document.querySelectorAll('.home-today-week');
+const todayWeek = document.querySelectorAll('.today-week');
 
 const projectHome = document.getElementById('project-home');
 
@@ -53,18 +53,47 @@ const logoutBtn = document.getElementById('logout-btn');
 
 const eyeicon = document.getElementById('password-eye');
 
+const categorys = document.querySelectorAll('.project-task')
+
+const addCategorys = document.querySelectorAll('.add-project')
+
+const projectN1 = document.getElementById('project-n1');
+
+const projectN2 = document.getElementById('project-n2');
+
+const projectN3 = document.getElementById('project-n3');
+
+const addTodo = document.getElementById('add-todo');
+
+const addNote = document.getElementById('add-note');
+
+const renameBtns = document.querySelectorAll('.rename');
+
+const renameCloseBtn = document.getElementById('rename-popup__close-btn');
+
+const renamePopupOverlay = document.getElementById('rename-popup__overlay');
+
+const renameSubmitBtn =  document.getElementById('rename-btn');
+
+let renameTemplate = '';
+
+let renameName = '';
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
     fetch('/check_user_status/')
     .then(response => response.json())
     .then(data => {
+        console.log(data)
         if (data.is_authenticated) {
             loggedUserListeners();
+            domManager.getProjectNames(data.project_n1, data.project_n2, data.project_n3);
             taskManager.getTasks(data.username);
 
         } else {
             guessListeners();
+            domManager.getProjectNames('Gym', 'Study', 'Work')
             taskManager.getTasks();
             domManager.homeCount();
         }
@@ -136,6 +165,7 @@ function userLogin(email, pass) {
             domManager.clearTasks();
             domManager.updateCSRFToken();
             domManager.toggleSignInPopup();
+            domManager.getProjectNames(data.project_n1, data.project_n2, data.project_n3);
             taskManager.getTasks(data.username);
             emailElement.value = '';
             passwordElement.value = '';
@@ -320,21 +350,140 @@ function loggedUserListeners() {
     });
 }
 
+function removeSelected() {
+    todayWeek.forEach(option => {
+        option.classList.remove('selected');
+    })
+    categorys.forEach(option => {
+        option.classList.remove('selected');
+    })
+}
+
+function showHideRenameIcon(projectId) {
+    renameBtns.forEach(option => 
+        option.classList.remove('active'));
+    if (projectId !== undefined) {
+        const activeProject = document.getElementById(`rename-${projectId}`);
+        activeProject.classList.add('active');
+    }
+} 
+
+
+function renameCategory() {
+    fetch('/rename_category/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': domManager.getCSRFToken()
+        },
+        body: JSON.stringify({
+            category_template: renameTemplate,
+            category_name: renameName,
+        })
+    }) 
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById(`${data.category_template}`).textContent = data.category_name;
+            document.getElementById(`add-${data.category_template}`).textContent = data.category_name;
+            domManager.toggleRenamePopup();
+            console.log('Rename successful');
+        } else {
+            console.error('Rename failed:', data.error);
+        }
+    })
+}
+
+
+renameSubmitBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    renameName = document.getElementById('rename-popup__input').value;
+    renameCategory();
+})
+
+projectHome.addEventListener('click', () => {
+    removeSelected();
+    showHideRenameIcon();
+    projectHome.classList.add('selected');
+    domManager.showHomeTasks();
+})
+
+todayWeek.forEach(option => {
+    option.addEventListener('click', () => {
+        removeSelected();
+        showHideRenameIcon();
+        projectHome.classList.remove('selected');
+        option.classList.add('selected');
+    })
+});
+
+categorys.forEach(option => {
+    option.addEventListener('click', () => {
+        removeSelected();
+        projectHome.classList.remove('selected');
+        option.classList.add('selected');
+        showHideRenameIcon(option.classList[1]);
+    })
+});  
+
+addCategorys.forEach(option => {
+    option.addEventListener('click', () => {
+        addTodo.classList.remove('selected');
+        addNote.classList.remove('selected');
+        addCategorys.forEach(opt => 
+            opt.classList.remove('selected'));
+        option.classList.add('selected');
+    })    
+});
+
+addTodo.addEventListener('click', () => {
+    addTodo.classList.add('selected');
+    addNote.classList.remove('selected');
+    addCategorys.forEach(option => {
+        option.classList.remove('selected');
+    })
+});
+
+addNote.addEventListener('click', () => {
+    addNote.classList.add('selected');
+    addTodo.classList.remove('selected');
+    addCategorys.forEach(option => {
+        option.classList.remove('selected');
+    })
+});
 
 createNewTaskCloseBtn.addEventListener('click', () => {
     domManager.toggleNewTaskPopup();
+    addTodo.classList.add('selected');
+    addNote.classList.remove('selected');
+    addCategorys.forEach(option => {
+        option.classList.remove('selected');
+    })
 });
 
 createNewTaskOverlay.addEventListener('click', (e) => {
     if (e.target === createNewTaskOverlay) {
         domManager.toggleNewTaskPopup();
+        addTodo.classList.add('selected');
+        addNote.classList.remove('selected');
+        addCategorys.forEach(option => {
+            option.classList.remove('selected');
+        })
     }
 });
 
 createNew.addEventListener('submit', (e) => {
     e.preventDefault();
     taskManager.createTask();
+    removeSelected();
+    projectHome.classList.add('selected');
+    domManager.showHomeTasks();
     domManager.toggleNewTaskPopup();
+    addTodo.classList.add('selected');
+    addNote.classList.remove('selected');
+    addCategorys.forEach(option => {
+        option.classList.remove('selected');
+    })
 });
 
 priorityBtns.forEach(btn =>
@@ -375,16 +524,24 @@ deleteCancel.addEventListener('click', (e) => {
     domManager.toggleDeletePopup();
 });
 
-homeTodayWeek.forEach(option => {
-    option.addEventListener('click', () => {
-        homeTodayWeek.forEach(opt => 
-            opt.classList.remove('selected'));
-        option.classList.add('selected');
+renameBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const categoryElement = btn.nextElementSibling;
+        renameTemplate = categoryElement.classList[1];
+        renameName = categoryElement.textContent;
+        document.getElementById('rename-popup__input').value = renameName;
+        domManager.toggleRenamePopup();
     })
 });
 
-projectHome.addEventListener('click', () => {
-    domManager.showHomeTasks();
+renameCloseBtn.addEventListener('click', () => {
+    domManager.toggleRenamePopup();
+});
+
+renamePopupOverlay.addEventListener('click', (e) => {
+    if (e.target === renamePopupOverlay) {
+        domManager.toggleRenamePopup();
+    }
 });
 
 projectToday.addEventListener('click', () => {
@@ -393,6 +550,18 @@ projectToday.addEventListener('click', () => {
 
 projectWeek.addEventListener('click', () => {
     domManager.showWeekTasks();
+});
+
+projectN1.addEventListener('click', () => {
+    domManager.showProjectN1();
+});
+
+projectN2.addEventListener('click', () => {
+    domManager.showProjectN2();
+});
+
+projectN3.addEventListener('click', () => {
+    domManager.showProjectN3();
 });
 
 menuCheckbox.addEventListener('change', (e) => {
@@ -437,4 +606,5 @@ loginForm.addEventListener('submit', (e) => {
 
 logoutBtn.addEventListener('click', () => {
     userLogout();
+    domManager.getProjectNames('Gym', 'Study', 'Work')
 });

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import json
-from . models import Task
+from . models import Task, TaskCategory
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm
 from django.middleware.csrf import get_token
@@ -17,12 +17,25 @@ def index(request):
 def add_task(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        # print(f"Received data: {data}")
+
+        project_template = data.get('project_template')
+        print(project_template)
+        category = None
+        project = None
+
+        if project_template:
+            project = project_template
+            category = TaskCategory.objects.get(user=request.user, template=project_template)
+           
+
+        print(f"Received data: {data}")
         task = Task.objects.create(
             title = data['title'],
             details = data['details'],    
             priority = data['priority'],        
             due_date = data['due_date'],
+            project = project,
+            category = category,
             completed = False,
             user = request.user,
         )
@@ -34,6 +47,7 @@ def add_task(request):
             'priority': task.priority,
             'details': task.details,
             'completed': task.completed,
+            'project': task.project,
         }})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
@@ -41,12 +55,13 @@ def add_task(request):
 def get_tasks(request):
     if request.user.is_authenticated:
         tasks = Task.objects.filter(user=request.user).values(
-            'id', 'title', 'due_date', 'priority', 'completed', 'user')
+            'id', 'title', 'due_date', 'priority', 'project', 'completed', 'user')
+        # print(tasks)
         return JsonResponse(list(tasks), safe=False)
     else:
         default_user = User.objects.get(username="Default")
         tasks = Task.objects.filter(user=default_user).values(
-            'id', 'title', 'due_date', 'priority', 'completed', 'user')
+            'id', 'title', 'due_date', 'priority', 'project', 'completed', 'user')
         return JsonResponse(list(tasks), safe=False)
 
 
@@ -118,7 +133,10 @@ def register(request):
         form = RegisterForm(data)
         # print(data)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            TaskCategory.objects.create(user=user, template='project-n1', name='Gym')
+            TaskCategory.objects.create(user=user, template='project-n2', name='Study')
+            TaskCategory.objects.create(user=user, template='project-n3',name='Work')
             return JsonResponse({'success': True})
         else:
             # print(form.errors)
@@ -136,7 +154,15 @@ def user_login(request):
         user = authenticate_by_email(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return JsonResponse({'success': True, 'username': request.user.username})
+            project_n1 = TaskCategory.objects.get(user=user, template='project-n1')
+            project_n2 = TaskCategory.objects.get(user=user, template='project-n2')
+            project_n3 = TaskCategory.objects.get(user=user, template='project-n3')
+            return JsonResponse({'success': True,
+                                 'username': request.user.username, 
+                                 'project_n1': project_n1.name,
+                                 'project_n2': project_n2.name,
+                                 'project_n3': project_n3.name,
+                                })
         else:
             return JsonResponse({'success': False, 'error': 'Invalid credentials'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
@@ -168,9 +194,15 @@ def get_new_csrf_token(request):
 
 def check_user_status(request):
     if request.user.is_authenticated:
+        project_n1 = TaskCategory.objects.get(user=request.user, template='project-n1')
+        project_n2 = TaskCategory.objects.get(user=request.user, template='project-n2')
+        project_n3 = TaskCategory.objects.get(user=request.user, template='project-n3')
         return JsonResponse({
             'is_authenticated': True,
             'username': request.user.username,
+            'project_n1': project_n1.name,
+            'project_n2': project_n2.name,
+            'project_n3': project_n3.name,
         })
     else:
         return JsonResponse({
@@ -206,3 +238,18 @@ def validate_user(request):
                              'password': False})
     
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+
+def rename_category(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        new_name = data.get('category_name')
+
+        category = TaskCategory.objects.get(user=request.user, template=data.get('category_template'))
+        category.name = new_name
+        category.save()
+
+        return JsonResponse({'success': True, 'category_template': category.template, 'category_name': new_name})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})    

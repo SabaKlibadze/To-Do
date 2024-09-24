@@ -31,34 +31,48 @@
             <nav class="side_bar" id="side_bar">
                 <ul id="navig">
                     <li id="home"> 
-                        <h2 class="home-today-week project-home selected" id="project-home">
+                        <h2 class="project-home selected" id="project-home">
                             <span class="project-flex-1 ">H</span>
                             <span class="project-flex-2 ">ome</span>
                         </h2>
                         <span class="home-count" id="home-count"></span>
                     </li>
                     <li id="today">
-                        <h2 class="home-today-week project-today" id="project-today">
-                            <span class="project-flex-1">T</span>
-                            <span class="project-flex-2">oday</span>
-                        </h2>
+                        <span class="today-week project-today" id="project-today">Today</span>
                         <span class="today-count" id="today-count"></span>
                     </li>
                     <li id="week">
-                        <h2 class="home-today-week project-week" id="project-week">
-                            <span class="project-flex-1">W</span>
-                            <span class="project-flex-2">eek</span>
-                        </h2>
+                        <span class="today-week project-week" id="project-week">Week</span>
                         <span class="week-count" id="week-count"></span>
                     </li>
-                    <div id="new-projects">
+                    <!-- <div id="new-projects">
                         <img id="construction" src="../static/todoapp/images/construction.png" alt="under construction">
                         <span class="project-task project-task-header" >Projects</span>
                         <span class="project-task">Gym</span>
                         <span class="project-task">Study</span>
                         <span class="project-task">Work</span>
                         <span class="project-task project-task-header">Notes</span>
+                    </div> -->
+                    <div id="projects">
+                        <span class="projects__header">Projects</span>
+                        <div>
+                            <img src="../static/todoapp/images/rename.png" id="rename-project-n1" class="rename" alt="rename category">
+                            <span class="project-task project-n1" id="project-n1"></span>
+                            <span class="counter" id="project-n1-count"></span>
+                        </div>
+                        <div>
+                            <img src="../static/todoapp/images/rename.png" id="rename-project-n2" class="rename" alt="rename category">
+                            <span class="project-task project-n2" id="project-n2"></span>
+                            <span class="counter" id="project-n2-count"></span>
+                        </div>
+                        <div>
+                            <img src="../static/todoapp/images/rename.png" id="rename-project-n3" class="rename" alt="rename category">
+                            <span class="project-task project-n3" id="project-n3"></span>
+                            <span class="counter" id="project-n3-count"></span>
+                        </div>
                     </div>
+                    <span class="projects__header" id="notes">Notes</span>
+                
                 </ul>
                 <div id="create-new-task-btn" class="create-new-task-btn">+</div>
             </nav>
@@ -68,8 +82,8 @@
                 </form>
             </div>
         </div>
-        <div class="overlay hidden" id="overlay">
-            <form class="create-new" id="create-new" method="post">
+         <!-- <div class="overlay active" id="overlay">
+            <form class="create-new active" id="create-new" method="post">
                 {% csrf_token %}
                 <div  class="create-new__close-btn">&times;</div>
                 <div class="create-new__content-box"> 
@@ -110,6 +124,46 @@
                     </div>
                 </div>
             </form>
+        </div> -->
+        <div class="overlay hidden" id="overlay">
+            <form class="create-new" id="create-new" method="post">
+                <!-- {% csrf_token %} -->
+                <div  class="create-new__close-btn">&times;</div>
+                <div class="create-new__content-box"> 
+                    <div class="create-new__sidebar">
+                        <span id="add-todo" class="add-todo selected">To Do</span>
+                        <div id="add-todo__projects">
+                            <span id="add-project-n1" class="add-project project-n1">Gym</span>
+                            <span id="add-project-n2" class="add-project project-n2">Study</span>
+                            <span id="add-project-n3" class="add-project project-n3">Work</span>
+                            <!-- <span class="project-task project-task-header">Notes</span> -->
+                        </div>
+                        <span id="add-note" class="add-note">Note</span>
+                    </div>
+                    <div class="create-new__imput">
+                        <textarea name="new-task" id="create-new__name" maxlength="40" placeholder="Title:" required></textarea>
+                        <textarea name="new-task-details" id="create-new__details" placeholder="Details:"></textarea>
+                        <div class="create-new-date">
+                            <div class="create-new-date__title">Due Date:</div>
+                            <input type="date" class="create-new-date__duedate" id="create-new-date__duedate" name="create-new-date__duedate" required>
+                        </div>
+                        <div class="crate-new__atributes">
+                            <div class="create-new-priority-and-submit">
+                                <div class="create-new-priority">
+                                    <div class="create_priority_title"> Priority: </div>
+                                    <input type="radio" name="create-priority" id="create-priority-low" value="low" required>
+                                    <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
+                                    <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
+                                    <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
+                                    <input type="radio" name="create-priority" id="create-priority-high" value="high" required>
+                                    <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
+                                </div>
+                                <input type="submit" id="new-task-submit" value="Add task">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
         <div class="details-popup__overlay hidden" id="details-popup__overlay">
             <div class="details-popup__container" id="details-popup__container">
@@ -125,6 +179,19 @@
                         <span class="details-popup__duedate-value"></span>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="rename-popup__overlay hidden" id="rename-popup__overlay">
+            <div class="rename-popup__container" id="rename-popup__container">
+                <div id="rename-popup__close-btn">&times;</div>
+                <form class="rename-popup__content">
+                    {% csrf_token %}
+                    <span>Rename project</span>
+                    <div id="rename_box">
+                        <input type="text" name="rename" id="rename-popup__input" maxlength="10" value="">
+                        <input type="submit" id="rename-btn" value="Rename">
+                    </div>
+                </form>
             </div>
         </div>
         <div id="edit-popup__overlay" class="edit-popup__overlay hidden">
@@ -223,8 +290,8 @@
             </div>
         </div>
     </div>
-<script src="../static/todoapp/js/particles.js"></script>
-<script src="../static/todoapp/js/app.js"></script>
+<!-- <script src="../static/todoapp/js/particles.js"></script>
+<script src="../static/todoapp/js/app.js"></script> -->
 <script type="module" src="../static/todoapp/js/index.js"></script>
 </body>
 </html>
