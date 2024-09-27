@@ -183,6 +183,35 @@ export const domManager = (function () {
     }
 
 
+    function hideNotes(taskContainer, notesContainer) {
+        taskContainer.style.display = 'block';
+        notesContainer.style.display = 'none';
+    }
+
+
+    const duedateAtribute = document.querySelector('.create-new-date');
+    const priorityAtribute = document.querySelector('.create-new-priority');
+    const addBtnContainer = document.querySelector('.create-new-priority-and-submit');
+    const addTaskBtn = document.getElementById('new-task-submit');
+    const addNoteBtn = document.getElementById('new-note-submit');
+
+    function hideAddTaskAtributes() {
+        duedateAtribute.style.display = 'none';
+        priorityAtribute.style.display = 'none';
+        addBtnContainer.style.justifyContent = 'flex-end';
+        addTaskBtn.style.display = 'none';
+        addNoteBtn.style.display = 'block';
+    }
+
+    function showAddTaskAtributes() {
+        duedateAtribute.style.display = 'flex';
+        priorityAtribute.style.display = 'flex';
+        addBtnContainer.style.justifyContent = 'space-between';
+        addTaskBtn.style.display = 'block';
+        addNoteBtn.style.display = 'none';
+    }
+
+
     function formatDate(dateString) {
         const date = new Date(dateString);
         const day = date.getDate();
@@ -244,6 +273,9 @@ export const domManager = (function () {
         showProjectN2,
         showProjectN3,
         clearTasks,
+        hideNotes,
+        hideAddTaskAtributes,
+        showAddTaskAtributes,
         formatDate,
         toggleNewTaskPopup,
         toggleTaskDetailsPopup,
@@ -341,7 +373,7 @@ export const taskManager = (function () {
             e.preventDefault(); 
             deleteConfirmation(`${task.id}`, user);
         })
-        console.log(task.project)
+
         if (task.project != null) {
             taskElement.classList.add(`${task.project}`);
         }
@@ -682,6 +714,143 @@ export const taskManager = (function () {
         activePriority,
         removeActivePriority,
         removeDetailsPriorityClasslist,
+    }
+
+})();
+
+
+
+export const notesManager = (function () {
+
+    let notesData = '';
+
+    function createNote(screenWidth) {
+        const noteTitle = document.getElementById('create-new__name');
+        const noteDetails = document.getElementById('create-new__details');
+
+        const noteData = {
+            title: noteTitle.value,
+            details: noteDetails.value,
+        }
+
+        fetch('/add_note/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': domManager.getCSRFToken()
+            },
+            body: JSON.stringify(noteData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                getNotes(screenWidth);
+                domManager.toggleNewTaskPopup();
+                noteTitle.value = '';
+                noteDetails.value = '';
+            } else {
+                console.error('Failed to add note:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+
+    function getNotes(screenWidth) {
+        fetch('/get_notes/')
+        .then(response => response.json())
+        .then(data => {
+            notesData = data;
+            distributeNotes(screenWidth);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+
+    function distributeNotes(screenWidth) {
+        const column1 = document.getElementById('column-1');
+        const column2 = document.getElementById('column-2');
+        const column3 = document.getElementById('column-3');
+        column1.innerHTML = '';
+        column2.innerHTML = '';
+        column3.innerHTML = '';
+
+        notesData.forEach((note, index) => {
+            const noteElement = document.createElement('div');
+            noteElement.classList.add('note');
+            noteElement.setAttribute('id', `note-${note.id}`);
+
+            const noteDelete = document.createElement('div');
+            noteDelete.classList.add('delete-note');
+            noteDelete.innerHTML = '&times;';
+
+            const noteTitle = document.createElement('h4');
+            noteTitle.classList.add('note-title');
+            noteTitle.textContent = note.title;
+    
+            const noteDetails = document.createElement('p');
+            noteDetails.classList.add('note-details');
+            noteDetails.textContent = note.details;
+
+            noteDelete.addEventListener('click', () => {
+                if (note.user === undefined) {
+                    domManager.toggleSignInPopup();
+                } else {
+                deleteNote(screenWidth, note.id);
+                }
+            });
+
+            noteElement.appendChild(noteDelete);
+            noteElement.appendChild(noteTitle);
+            noteElement.appendChild(noteDetails);
+
+            if (screenWidth > 768) {
+                if (index % 3 === 0) {
+                    column1.appendChild (noteElement);
+                } else if (index % 3 === 1) {
+                    column2.appendChild (noteElement);
+                } else {
+                    column3.appendChild (noteElement);
+                }
+            } else {
+                if (index % 2 === 0) {
+                    column1.appendChild(noteElement);
+                } else {
+                    column2.appendChild(noteElement);
+                }
+            }
+        })
+    }
+
+
+    function deleteNote(screenWidth, noteId) {
+        fetch(`/delete_note/${noteId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': domManager.getCSRFToken()
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                getNotes(screenWidth);
+                console.log('Note deleted successfully');
+            } else {
+                console.error('Failed to delete note');
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        })
+    }
+
+    return {
+        createNote,
+        getNotes,
+        distributeNotes,
+        deleteNote,
     }
 
 })();

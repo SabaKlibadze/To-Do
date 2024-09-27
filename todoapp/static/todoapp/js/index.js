@@ -1,4 +1,4 @@
-import { domManager, taskManager } from "./mainFunctions.js"
+import { domManager, taskManager, notesManager } from "./mainFunctions.js"
 
 
 const signInBtn = document.getElementById('sign-in__home-btn');
@@ -73,32 +73,62 @@ const renameCloseBtn = document.getElementById('rename-popup__close-btn');
 
 const renamePopupOverlay = document.getElementById('rename-popup__overlay');
 
-const renameSubmitBtn =  document.getElementById('rename-btn');
+const taskContainer = document.getElementById('task-container');
+
+const notesContainer = document.getElementById('notes-container');
+
+const notesBtn = document.getElementById('notes-btn');
+
+const creatNoteBtn = document.getElementById('new-note-submit');
 
 let renameTemplate = '';
 
 let renameName = '';
 
+let screenWidth = window.innerWidth;
+
+let notesColumns = 3;
 
 
 document.addEventListener('DOMContentLoaded', () => {
     fetch('/check_user_status/')
     .then(response => response.json())
     .then(data => {
-        console.log(data)
         if (data.is_authenticated) {
             loggedUserListeners();
             domManager.getProjectNames(data.project_n1, data.project_n2, data.project_n3);
             taskManager.getTasks(data.username);
-
+            notesManager.getNotes(screenWidth);
         } else {
             guessListeners();
             domManager.getProjectNames('Gym', 'Study', 'Work')
             taskManager.getTasks();
+            notesManager.getNotes(screenWidth);
             domManager.homeCount();
+        }
+        if (screenWidth <= 768) {
+            notesColumns = 2;
+        } else {
+            notesColumns = 3;
         }
     })
 })
+
+
+
+window.addEventListener('resize', () => { 
+    screenWidth = window.innerWidth;
+    if (screenWidth <= 768 && notesColumns !== 2) {
+        notesManager.distributeNotes(screenWidth);
+        notesColumns = 2;
+        // console.log('Mobile called')
+    }
+    else if (screenWidth > 768 && notesColumns !== 3) {
+        notesManager.distributeNotes(screenWidth);
+        notesColumns = 3;
+        // console.log('Desktop called')
+    }
+});
 
 
 
@@ -167,6 +197,7 @@ function userLogin(email, pass) {
             domManager.toggleSignInPopup();
             domManager.getProjectNames(data.project_n1, data.project_n2, data.project_n3);
             taskManager.getTasks(data.username);
+            notesManager.getNotes(screenWidth);
             emailElement.value = '';
             passwordElement.value = '';
             console.log('Login successful');
@@ -195,6 +226,7 @@ function userLogout() {
             guessListeners();
             domManager.clearTasks();
             taskManager.getTasks();
+            notesManager.getNotes(screenWidth);
             domManager.homeCount();
             domManager.updateCSRFToken();
             displayUsername.classList.toggle('hidden');
@@ -329,12 +361,18 @@ function showPassword() {
 }
 
 
-
 function guessListeners() {
     const createNewTaskBTN = document.getElementById('create-new-task-btn');
     createNewTaskBTN.replaceWith(createNewTaskBTN.cloneNode(true));
+    const renameSubmitBtn =  document.getElementById('rename-btn');
+    renameSubmitBtn.replaceWith(renameSubmitBtn.cloneNode(true));
 
     document.getElementById('create-new-task-btn').addEventListener('click', () => {
+        domManager.toggleSignInPopup();
+    });
+    document.getElementById('rename-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        domManager.toggleRenamePopup();
         domManager.toggleSignInPopup();
     });
 }
@@ -343,12 +381,21 @@ function guessListeners() {
 function loggedUserListeners() {
     const createNewTaskBTN = document.getElementById('create-new-task-btn');
     createNewTaskBTN.replaceWith(createNewTaskBTN.cloneNode(true));
+    const renameSubmitBtn =  document.getElementById('rename-btn');
+    renameSubmitBtn.replaceWith(renameSubmitBtn.cloneNode(true));
 
     document.getElementById('create-new-task-btn').addEventListener('click', () => {
         domManager.toggleNewTaskPopup();
+        domManager.showAddTaskAtributes();
         taskManager.removeActivePriority();
     });
+    document.getElementById('rename-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        renameName = document.getElementById('rename-popup__input').value;
+        renameCategory();
+    })
 }
+
 
 function removeSelected() {
     todayWeek.forEach(option => {
@@ -358,15 +405,6 @@ function removeSelected() {
         option.classList.remove('selected');
     })
 }
-
-function showHideRenameIcon(projectId) {
-    renameBtns.forEach(option => 
-        option.classList.remove('active'));
-    if (projectId !== undefined) {
-        const activeProject = document.getElementById(`rename-${projectId}`);
-        activeProject.classList.add('active');
-    }
-} 
 
 
 function renameCategory() {
@@ -395,25 +433,22 @@ function renameCategory() {
 }
 
 
-renameSubmitBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    renameName = document.getElementById('rename-popup__input').value;
-    renameCategory();
-})
 
 projectHome.addEventListener('click', () => {
     removeSelected();
-    showHideRenameIcon();
+    notesBtn.classList.remove('selected');
     projectHome.classList.add('selected');
     domManager.showHomeTasks();
+    domManager.hideNotes(taskContainer, notesContainer);
 })
 
 todayWeek.forEach(option => {
     option.addEventListener('click', () => {
         removeSelected();
-        showHideRenameIcon();
         projectHome.classList.remove('selected');
+        notesBtn.classList.remove('selected');
         option.classList.add('selected');
+        domManager.hideNotes(taskContainer, notesContainer);
     })
 });
 
@@ -421,8 +456,9 @@ categorys.forEach(option => {
     option.addEventListener('click', () => {
         removeSelected();
         projectHome.classList.remove('selected');
+        notesBtn.classList.remove('selected');
         option.classList.add('selected');
-        showHideRenameIcon(option.classList[1]);
+        domManager.hideNotes(taskContainer, notesContainer);
     })
 });  
 
@@ -433,6 +469,7 @@ addCategorys.forEach(option => {
         addCategorys.forEach(opt => 
             opt.classList.remove('selected'));
         option.classList.add('selected');
+        domManager.showAddTaskAtributes();
     })    
 });
 
@@ -442,6 +479,7 @@ addTodo.addEventListener('click', () => {
     addCategorys.forEach(option => {
         option.classList.remove('selected');
     })
+    domManager.showAddTaskAtributes();
 });
 
 addNote.addEventListener('click', () => {
@@ -450,6 +488,7 @@ addNote.addEventListener('click', () => {
     addCategorys.forEach(option => {
         option.classList.remove('selected');
     })
+    domManager.hideAddTaskAtributes();
 });
 
 createNewTaskCloseBtn.addEventListener('click', () => {
@@ -485,6 +524,12 @@ createNew.addEventListener('submit', (e) => {
         option.classList.remove('selected');
     })
 });
+
+creatNoteBtn.addEventListener('click', () => {
+    notesManager.createNote(screenWidth);
+    addTodo.classList.add('selected');
+    addNote.classList.remove('selected');
+})
 
 priorityBtns.forEach(btn =>
     btn.addEventListener('click', e => 
@@ -563,6 +608,14 @@ projectN2.addEventListener('click', () => {
 projectN3.addEventListener('click', () => {
     domManager.showProjectN3();
 });
+
+notesBtn.addEventListener('click', () => {
+    removeSelected();
+    projectHome.classList.remove('selected');
+    notesBtn.classList.add('selected');
+    taskContainer.style.display = 'none';
+    notesContainer.style.display = 'flex';
+})
 
 menuCheckbox.addEventListener('change', (e) => {
     if (e.target.checked) {

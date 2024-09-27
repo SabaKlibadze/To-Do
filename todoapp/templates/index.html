@@ -45,14 +45,6 @@
                         <span class="today-week project-week" id="project-week">Week</span>
                         <span class="week-count" id="week-count"></span>
                     </li>
-                    <!-- <div id="new-projects">
-                        <img id="construction" src="../static/todoapp/images/construction.png" alt="under construction">
-                        <span class="project-task project-task-header" >Projects</span>
-                        <span class="project-task">Gym</span>
-                        <span class="project-task">Study</span>
-                        <span class="project-task">Work</span>
-                        <span class="project-task project-task-header">Notes</span>
-                    </div> -->
                     <div id="projects">
                         <span class="projects__header">Projects</span>
                         <div>
@@ -71,8 +63,9 @@
                             <span class="counter" id="project-n3-count"></span>
                         </div>
                     </div>
-                    <span class="projects__header" id="notes">Notes</span>
-                
+                    <div class="projects__header">
+                        <span id="notes-btn">Notes</span>
+                    </div>
                 </ul>
                 <div id="create-new-task-btn" class="create-new-task-btn">+</div>
             </nav>
@@ -80,54 +73,16 @@
                 <form class="task-container" id="task-container" method="post">
                     {% csrf_token %}
                 </form>
+                <div id="notes-container">
+                    <div class="notes-container__columns" id="column-1"></div>
+                    <div class="notes-container__columns" id="column-2"></div>
+                    <div class="notes-container__columns" id="column-3"></div>
+                 </div>
             </div>
         </div>
-         <!-- <div class="overlay active" id="overlay">
-            <form class="create-new active" id="create-new" method="post">
-                {% csrf_token %}
-                <div  class="create-new__close-btn">&times;</div>
-                <div class="create-new__content-box"> 
-                    <div class="create-new__sidebar">
-                        <h2 id="add-todo">
-                            <img class="selected-icon" src="../static/todoapp/images/slash.png" alt="todo icon">
-                            <span>ToDo</span>
-                        </h2>
-                        <div id="add-todo__projects">
-                            <img id="add-todo__construction" src="../static/todoapp/images/construction.png" alt="under construction">
-                            <span class="project-task">Gym</span>
-                            <span class="project-task">Study</span>
-                            <span class="project-task">Work</span>
-                            <span class="project-task project-task-header">Notes</span>
-                        </div>
-                    </div>
-                    <div class="create-new__imput">
-                        <textarea name="new-task" id="create-new__name" maxlength="40" placeholder="Title:" required></textarea>
-                        <textarea name="new-task-details" id="create-new__details" placeholder="Details:"></textarea>
-                        <div class="create-new-date">
-                            <div class="create-new-date__title">Due Date:</div>
-                            <input type="date" class="create-new-date__duedate" id="create-new-date__duedate" name="create-new-date__duedate" required>
-                        </div>
-                        <div class="crate-new__atributes">
-                            <div class="create-new-priority-and-submit">
-                                <div class="create-new-priority">
-                                    <div class="create_priority_title"> Priority: </div>
-                                    <input type="radio" name="create-priority" id="create-priority-low" value="low" required>
-                                    <label for="create-priority-low" class="create-priority-btn create-priority-btn--low">low</label>
-                                    <input type="radio" name="create-priority" id="create-priority-medium" value="medium" required>
-                                    <label for="create-priority-medium" class="create-priority-btn create-priority-btn--medium">medium</label>
-                                    <input type="radio" name="create-priority" id="create-priority-high" value="high" required>
-                                    <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
-                                </div>
-                                <input type="submit" id="new-task-submit" value="Add task">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div> -->
         <div class="overlay hidden" id="overlay">
             <form class="create-new" id="create-new" method="post">
-                <!-- {% csrf_token %} -->
+                {% csrf_token %}
                 <div  class="create-new__close-btn">&times;</div>
                 <div class="create-new__content-box"> 
                     <div class="create-new__sidebar">
@@ -136,7 +91,6 @@
                             <span id="add-project-n1" class="add-project project-n1">Gym</span>
                             <span id="add-project-n2" class="add-project project-n2">Study</span>
                             <span id="add-project-n3" class="add-project project-n3">Work</span>
-                            <!-- <span class="project-task project-task-header">Notes</span> -->
                         </div>
                         <span id="add-note" class="add-note">Note</span>
                     </div>
@@ -159,6 +113,7 @@
                                     <label for="create-priority-high" class="create-priority-btn create-priority-btn--high">high</label>
                                 </div>
                                 <input type="submit" id="new-task-submit" value="Add task">
+                                <input type="button" id="new-note-submit" value="create note">
                             </div>
                         </div>
                     </div>
@@ -290,8 +245,8 @@
             </div>
         </div>
     </div>
-<!-- <script src="../static/todoapp/js/particles.js"></script>
-<script src="../static/todoapp/js/app.js"></script> -->
+<script src="../static/todoapp/js/particles.js"></script>
+<script src="../static/todoapp/js/app.js"></script>
 <script type="module" src="../static/todoapp/js/index.js"></script>
 </body>
 </html>

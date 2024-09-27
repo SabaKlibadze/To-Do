@@ -16,4 +16,7 @@ urlpatterns = [
     path('check_user_status/', views.check_user_status, name='check_user_status'),
     path('validate_user/', views.validate_user, name='validate_user'),
     path('rename_category/', views.rename_category, name='rename_category'),
+    path('add_note/', views.add_note, name='add_note'),
+    path('get_notes/', views.get_notes, name='get_notes'),
+    path('delete_note/<int:note_id>/', views.delete_note, name='delete_note'),
 ]

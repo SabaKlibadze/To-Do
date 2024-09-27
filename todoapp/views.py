@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import json
-from . models import Task, TaskCategory
+from . models import Task, TaskCategory, Note
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm
 from django.middleware.csrf import get_token
@@ -252,4 +252,43 @@ def rename_category(request):
 
         return JsonResponse({'success': True, 'category_template': category.template, 'category_name': new_name})
     
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})    
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})  
+
+
+def add_note(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        note = Note.objects.create(
+            title = data['title'],
+            details = data['details'],    
+            user = request.user,
+        )
+        print(f"Note created: {note}")
+        return JsonResponse({'success': True, 'user': request.user.username, 'note': {
+            'id': note.id, 
+            'title': note.title, 
+            'details': note.details,
+        }})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+def get_notes(request):
+    if request.user.is_authenticated:
+        notes = Note.objects.filter(user=request.user).order_by('-created_at').values('id', 'title', 'details', 'user')
+        return JsonResponse(list(notes), safe=False)
+    else:
+        default_user = User.objects.get(username="Default")
+        notes = Note.objects.filter(user=default_user).order_by('-created_at').values('id', 'title', 'details')
+        return JsonResponse(list(notes), safe=False)
+
+
+
+def delete_note(request, note_id):
+    if request.method == 'POST':
+        try:
+            note = Note.objects.get(id=note_id)
+            note.delete()
+            return JsonResponse({'message': 'Note deleted successfully!'}, status=200)
+        except Note.DoesNotExist:
+            return JsonResponse({'error': 'Note not found!'}, status=404)
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
