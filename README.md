@@ -10,25 +10,21 @@ This is a dynamic **ToDo** application built using **Django** on the backend and
 - View task details, edit, delete, and mark tasks as completed.
 - Three priority levels for tasks.
 - Tasks filtering by due dates.
+- Task categorization (e.g. work, personal).
+- Notes section.
 - Dynamic page updates without reloading.
 - Responsive design.
 
 ## Technologies
 
-- **Backend**: Django (Python)
-- **Frontend**: HTML, CSS, JavaScript
-- **Database**: SQLite (default)
-
-## Future Improvements
-
-- Task categorization (e.g. work, personal).
-- Notes section (add, remove or edit notes).
-- Google authentication integration.
+- **Backend**: Django (Python).
+- **Frontend**: HTML, CSS, JavaScript.
+- **Database**: SQLite (default).
 
 ## License
 
 This project uses the following third-party library:
-- [particles.js] by Vincent Garreau, licensed under the MIT License. You can find the full license [here](https://github.com/VincentGarreau/particles.js/blob/master/LICENSE.md).
+- [particles.js](https://github.com/VincentGarreau/particles.js) by Vincent Garreau, licensed under the MIT License. You can find the full license [here](https://github.com/VincentGarreau/particles.js/blob/master/LICENSE.md).
 
 [Live App](https://sabaklibadze.pythonanywhere.com/)
 
